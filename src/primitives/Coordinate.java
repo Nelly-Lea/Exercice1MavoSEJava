@@ -40,4 +40,8 @@ public final class Coordinate {
     public String toString() {
         return "" + coord;
     }
+
+    public double getCoord() {
+        return coord;
+    }
 }

@@ -85,5 +85,13 @@ public class Polygon implements Geometry {
     public Vector getNormal(Point3D point) {
         return plane.getNormal();
     }
+
+    @Override
+    public String toString() {
+        return "Polygon{" +
+                "vertices=" + vertices +
+                ", plane=" + plane +
+                '}';
+    }
 }
 
