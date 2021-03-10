@@ -20,6 +20,7 @@ public class Polygon implements Geometry {
      */
     protected Plane plane;
 
+
     /**
      * Polygon constructor based on vertices list. The list must be ordered by edge
      * path. The polygon must be convex.
@@ -86,12 +87,5 @@ public class Polygon implements Geometry {
         return plane.getNormal();
     }
 
-    @Override
-    public String toString() {
-        return "Polygon{" +
-                "vertices=" + vertices +
-                ", plane=" + plane +
-                '}';
-    }
 }
 

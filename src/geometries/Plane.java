@@ -7,13 +7,25 @@ public class Plane {
     final Point3D _q0;
     final Vector _normal ;
 
+    //return the point _q0 of the plane
+    public Point3D get_q0() {
+        return _q0;
+    }
+
+    //return the normal of the plane
+    public Vector get_normal() {
+        return _normal;
+    }
+
+    // constructor that receives point that belongs to the plane and normal of the plane
     public Plane(Point3D q0, Vector normal) {
         _q0 = q0;
         _normal = normal;
     }
 
-    public Plane(Point3D vertex, Point3D vertex1, Point3D vertex2) {
-        _q0 = vertex;
+    //constructor that receives 3 points and do a plane from these 3 points
+    public Plane(Point3D p0, Point3D p1, Point3D p2) {
+        _q0 = p0;
         _normal = null;
     }
 

@@ -24,29 +24,19 @@ public class Point3D {
      */
 
 
+    //constructor that receives 3 coordinates
     public Point3D(Coordinate x, Coordinate y, Coordinate z) {
         this(x.coord, y.coord, z.coord);
     }
 
+    //constructor that receives 3 double and build a Point3D
     public Point3D(double x, double y, double z) {
         _x = new Coordinate(x);
         _y = new Coordinate(y);
         _z = new Coordinate(z);
     }
 
-
-    public Coordinate get_x() {
-        return _x;
-    }
-
-    public Coordinate get_y() {
-        return _y;
-    }
-
-    public Coordinate get_z() {
-        return _z;
-    }
-
+    //function equal return true if the 2 Points3D are equal
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -85,19 +75,26 @@ public class Point3D {
         return Math.sqrt(distanceSquared(point3D));
     }
 
+    /**
+     * @param pt2
+     * @return a vector from the second point to the point on which the operation is performed
+     */
     public Vector subtract(Point3D pt2) {
         if (pt2.equals(this)) {
             throw new IllegalArgumentException("cannot create Vector to Point(0,0,0)");
         }
         return new Vector(new Point3D(
-                pt2._x.coord - _x.coord,
-                pt2._y.coord - _y.coord,
-                pt2._z.coord - _z.coord
+                 _x.coord-pt2._x.coord,
+                 _y.coord-pt2._y.coord,
+                 _z.coord-pt2._z.coord
         ));
     }
 
 
-
+    /**
+     * @param vector
+     * @return a new Point3D
+     */
     public Point3D add(Vector vector) {
         return new Point3D(
                 _x.coord + vector._head._x.coord,

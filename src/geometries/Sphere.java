@@ -7,6 +7,14 @@ public class Sphere {
     final Point3D _center;
     final double _radius;
 
+    public Point3D get_center() {
+        return _center;
+    }
+
+    public double get_radius() {
+        return _radius;
+    }
+//constructor that receives the center point and the radius
     public Sphere(Point3D center, double radius) {
         _center = center;
         _radius = radius;
