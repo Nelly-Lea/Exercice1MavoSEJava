@@ -2,6 +2,7 @@ package primitives;
 
 import static primitives.Util.*;
 
+
 /**
  * Class Coordinate is the basic class representing a coordinate for Cartesian
  * coordinate system. The class is based on Util controlling the accuracy.
@@ -14,7 +15,7 @@ public final class Coordinate {
      * Coordinate value, intentionally "package-friendly" due to performance
      * constraints
      */
-    final double coord;
+    final double _coord;
 
     /**
      * Coordinate constructor receiving a coordinate value
@@ -23,7 +24,7 @@ public final class Coordinate {
      */
     public Coordinate(double coord) {
         // if it too close to zero make it zero
-        this.coord = alignZero(coord);
+        this._coord = alignZero(coord);
     }
 
     /*************** Admin *****************/
@@ -33,15 +34,15 @@ public final class Coordinate {
         if (obj == null) return false;
         if (!(obj instanceof Coordinate)) return false;
         Coordinate other = (Coordinate)obj;
-        return isZero(coord - other.coord);
+        return isZero(_coord - other._coord);
     }
 
     @Override
     public String toString() {
-        return "" + coord;
+        return "" + _coord;
     }
 
     public double getCoord() {
-        return coord;
+        return _coord;
     }
 }

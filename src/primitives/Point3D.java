@@ -1,8 +1,5 @@
 package primitives;
 
-import java.awt.*;
-import java.util.Objects;
-
 /**
  * basic Point for RayTracing project in 3D
  *
@@ -26,7 +23,13 @@ public class Point3D {
 
     //constructor that receives 3 coordinates
     public Point3D(Coordinate x, Coordinate y, Coordinate z) {
-        this(x.coord, y.coord, z.coord);
+
+        //this(x._coord, y._coord, z._coord);
+        //for performance improvement
+        _x = x;
+        _y = y;
+        _z = z;
+
     }
 
     //constructor that receives 3 double and build a Point3D
@@ -55,12 +58,12 @@ public class Point3D {
      * @return (x2 - x1)^2 + (y2-y1)^2 +(z2-z1)^2
      */
     public double distanceSquared(Point3D other) {
-        final double x1 = _x.coord;
-        final double y1 = _y.coord;
-        final double z1 = _z.coord;
-        final double x2 = other._x.coord;
-        final double y2 = other._y.coord;
-        final double z2 = other._z.coord;
+        final double x1 = _x._coord;
+        final double y1 = _y._coord;
+        final double z1 = _z._coord;
+        final double x2 = other._x._coord;
+        final double y2 = other._y._coord;
+        final double z2 = other._z._coord;
 
         return ((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)) + ((z2 - z1) * (z2 - z1));
 
@@ -84,9 +87,9 @@ public class Point3D {
             throw new IllegalArgumentException("cannot create Vector to Point(0,0,0)");
         }
         return new Vector(new Point3D(
-                 _x.coord-pt2._x.coord,
-                 _y.coord-pt2._y.coord,
-                 _z.coord-pt2._z.coord
+                _x._coord - pt2._x._coord,
+                _y._coord - pt2._y._coord,
+                _z._coord - pt2._z._coord
         ));
     }
 
@@ -97,9 +100,9 @@ public class Point3D {
      */
     public Point3D add(Vector vector) {
         return new Point3D(
-                _x.coord + vector._head._x.coord,
-                _y.coord + vector._head._y.coord,
-                _z.coord + vector._head._z.coord
+                _x._coord + vector._head._x._coord,
+                _y._coord + vector._head._y._coord,
+                _z._coord + vector._head._z._coord
         );
     }
 }

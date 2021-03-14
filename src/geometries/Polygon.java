@@ -1,8 +1,11 @@
 package geometries;
 
+import primitives.Point3D;
+import primitives.Vector;
+
 import java.util.List;
-import primitives.*;
-import static primitives.Util.*;
+
+import static primitives.Util.isZero;
 
 /**
  * Polygon class represents two-dimensional polygon in 3D Cartesian coordinate
@@ -53,7 +56,7 @@ public class Polygon implements Geometry {
         if (vertices.length == 3)
             return; // no need for more tests for a Triangle
 
-        Vector n = plane.getNormal();
+        Vector n = plane.getNormal(null);
 
         // Subtracting any subsequent points will throw an IllegalArgumentException
         // because of Zero Vector if they are in the same point
@@ -84,7 +87,8 @@ public class Polygon implements Geometry {
 
     @Override
     public Vector getNormal(Point3D point) {
-        return plane.getNormal();
+
+        return plane.getNormal(null);
     }
 
 }

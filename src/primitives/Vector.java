@@ -1,8 +1,5 @@
 package primitives;
 
-import java.awt.*;
-import java.util.Objects;
-
 import static primitives.Point3D.ZERO;
 
 public class Vector {
@@ -55,12 +52,12 @@ public class Vector {
      * @return u1 * v1 + u2 * v2 + u3 * v3
      */
     public double dotProduct(Vector v) {
-        double u1 = _head._x.coord;
-        double u2 = _head._y.coord;
-        double u3 = _head._z.coord;
-        double v1 = v._head._x.coord;
-        double v2 = v._head._y.coord;
-        double v3 = v._head._z.coord;
+        double u1 = _head._x._coord;
+        double u2 = _head._y._coord;
+        double u3 = _head._z._coord;
+        double v1 = v._head._x._coord;
+        double v2 = v._head._y._coord;
+        double v3 = v._head._z._coord;
 
         return (u1 * v1 + u2 * v2 + u3 * v3);
 
@@ -72,20 +69,23 @@ public class Vector {
      * @return the orthogonal vector to vector v and the vector on which the operation is performed
      */
     public Vector crossProduct(Vector v) {
-        double u1 = _head._x.coord;
-        double u2 = _head._y.coord;
-        double u3 = _head._z.coord;
-        double v1 = v._head._x.coord;
-        double v2 = v._head._y.coord;
-        double v3 = v._head._z.coord;
+        double u1 = _head._x._coord;
+        double u2 = _head._y._coord;
+        double u3 = _head._z._coord;
+        double v1 = v._head._x._coord;
+        double v2 = v._head._y._coord;
+        double v3 = v._head._z._coord;
 
-        return new Vector(new Point3D(
+       Point3D newhead=new Point3D(
                 u2*v3-u3*v2,
                 u3*v1-u1*v3,
                 u1*v2-u2*v1
 
-        ));
-
+        );
+       if(newhead.equals(ZERO)){
+           throw new IllegalArgumentException("cross product resulting zero point head");
+       }
+       return new Vector(newhead);
     }
 
     /**
@@ -94,9 +94,9 @@ public class Vector {
      */
     public Vector add(Vector v){
         return new Vector(new Point3D(
-               _head._x.coord+v._head._x.coord,
-               _head._y.coord+v._head._y.coord,
-               _head._z.coord+v._head._z.coord
+               _head._x._coord +v._head._x._coord,
+               _head._y._coord +v._head._y._coord,
+               _head._z._coord +v._head._z._coord
 
         ));
     }
@@ -111,9 +111,9 @@ public class Vector {
         }
 
         return new Vector(new Point3D(
-                _head._x.coord-v._head._x.coord,
-                _head._y.coord-v._head._y.coord,
-                _head._z.coord-v._head._z.coord
+                _head._x._coord -v._head._x._coord,
+                _head._y._coord -v._head._y._coord,
+                _head._z._coord -v._head._z._coord
 
         ));
     }
@@ -124,16 +124,16 @@ public class Vector {
      */
     public Vector scale(double d){
         return new Vector(new Point3D(
-                d*_head._x.coord,
-                d*_head._y.coord,
-                d*_head._z.coord
+                d*_head._x._coord,
+                d*_head._y._coord,
+                d*_head._z._coord
 
         ));
     }
 
     //return the vector length squared
     public double lengthSquared(){
-        return (_head._x.coord)*(_head._x.coord)+(_head._y.coord)*(_head._y.coord)+(_head._z.coord)*(_head._z.coord);
+        return (_head._x._coord)*(_head._x._coord)+(_head._y._coord)*(_head._y._coord)+(_head._z._coord)*(_head._z._coord);
     }
 
     //return the vector length
@@ -145,21 +145,21 @@ public class Vector {
     //return the vector on which the operation is performed normalized
     public Vector normalize(){
 
-        double x=_head._x.coord;
-        double y=_head._y.coord;
-        double z=_head._z.coord;
+        double x=_head._x._coord;
+        double y=_head._y._coord;
+        double z=_head._z._coord;
         double l=this.length();
         _head=new Point3D(x/l,y/l,z/l);
-   return this;
+        return this;
 
     }
 
     //return new vector normal from the vector on which the operation is performed
     public Vector normalized(){
         return new Vector(new Point3D(
-                _head._x.coord/this.length(),
-                _head._y.coord/this.length(),
-                _head._z.coord/this.length()
+                _head._x._coord /this.length(),
+                _head._y._coord /this.length(),
+                _head._z._coord /this.length()
 
         ));
     }

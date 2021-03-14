@@ -13,24 +13,28 @@ public class Plane {
     }
 
     //return the normal of the plane
-    public Vector get_normal() {
-        return _normal;
-    }
+//    public Vector get_normal() {
+//        return _normal;
+//    }
 
     // constructor that receives point that belongs to the plane and normal of the plane
     public Plane(Point3D q0, Vector normal) {
         _q0 = q0;
         _normal = normal;
-    }
+     }
 
     //constructor that receives 3 points and do a plane from these 3 points
     public Plane(Point3D p0, Point3D p1, Point3D p2) {
         _q0 = p0;
-        _normal = null;
+        Vector U=p1.subtract(p0);
+        Vector V=p2.subtract(p0);
+        Vector N= U.crossProduct(V);
+        N.normalize();
+        _normal = N;
     }
 
-    public Vector getNormal() {
-        //To do
+    public Vector getNormal(Point3D point) {
+
         return _normal;
     }
 
