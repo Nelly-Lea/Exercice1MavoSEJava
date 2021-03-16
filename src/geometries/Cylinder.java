@@ -18,20 +18,21 @@ public class Cylinder extends Tube {
     //return the normal of the cylinder at point p0
     public Vector getNormal(Point3D p0)
     {
-        if(p0.equals(_axisRay.get_p0()))
-            return _axisRay.get_dir();
-        Vector v=p0.subtract(_axisRay.get_p0());
-        double s=v.dotProduct(_axisRay.get_dir());
-        if(isZero(s))
-            return _axisRay.get_dir();//if p0 belongs to the base of the cylinder where _axisRay.get_p0() is
-        else { //if p0 belongs to the opposite base
-            Vector v2 = _axisRay.get_dir().scale(_height);//vector of length _height
-            Point3D p02 = p0.add(v2);//projection of _axisRay.get_p0() on the opposite base
-            Vector v3 = p02.subtract(p0);//vector between p0 and p02
-            if (isZero(v3.dotProduct(_axisRay.get_dir())))
-                return _axisRay.get_dir();
+       Point3D o=_axisRay.get_p0();
+       Vector v=_axisRay.get_dir();
+
+       //projection of P-o on the ray:
+        double t;
+        try{
+            t=alignZero(p0.subtract(o).dotProduct(v));
+        }catch(IllegalArgumentException e) {//P=O
+            return v;
         }
-        return super.getNormal(p0);
+        //if the point is a base
+        if(t==0||isZero(_height-t))//if it's close to 0,we'll get ZERO vector exception
+           return v;
+        o=o.add(v.scale(t));
+        return p0.subtract(o).normalize();
     }
 
     // return the height of the cylinder

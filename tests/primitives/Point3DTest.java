@@ -27,7 +27,7 @@ class Point3DTest {
         assertEquals(1.5,p3.distance(p2),0.1);
     }
     @Test
-    void suaredDistance(){
+    void squaredDistance(){
         assertEquals(0, p1.distanceSquared(p2));
     }
 }

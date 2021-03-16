@@ -25,6 +25,8 @@ public class Plane {
 
     //constructor that receives 3 points and do a plane from these 3 points
     public Plane(Point3D p0, Point3D p1, Point3D p2) {
+        if((p0.equals(p1)||(p1.equals(p2))||(p0.equals(p2))))
+            throw new IllegalArgumentException();
         _q0 = p0;
         Vector U=p1.subtract(p0);
         Vector V=p2.subtract(p0);
