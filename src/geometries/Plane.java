@@ -1,9 +1,14 @@
 package geometries;
 
 import primitives.Point3D;
+import primitives.Ray;
 import primitives.Vector;
 
-public class Plane {
+import java.util.List;
+
+import static primitives.Util.isZero;
+
+public class Plane implements Geometry{
     final Point3D _q0;
     final Vector _normal ;
 
@@ -12,7 +17,16 @@ public class Plane {
         return _q0;
     }
 
-    //return the normal of the plane
+    /**
+     * getter of the normal vector field
+     * @deprecated use {@link Plane#getNormal(Point3D)} with null as parameter.
+     * @return
+     */
+    @Deprecated
+    public Vector getNormal() {
+        return _normal;
+    }
+//return the normal of the plane
 //    public Vector get_normal() {
 //        return _normal;
 //    }
@@ -35,6 +49,12 @@ public class Plane {
         _normal = N;
     }
 
+    /**
+     * implementation of getNormal from Geometry interface
+     * @param point reference point
+     * @return normal to the plane
+     */
+
     public Vector getNormal(Point3D point) {
 
         return _normal;
@@ -46,5 +66,24 @@ public class Plane {
                 "q0=" + _q0 +
                 ", normal=" + _normal +
                 '}';
+    }
+
+    @Override
+    public List<Point3D> findIntersections(Ray ray) {
+        Point3D p0=ray.get_p0();
+        Vector v=ray.get_dir();
+        double t=(_normal.dotProduct(_q0.subtract(p0)))/(_normal.dotProduct(v));
+        if((p0.equals(_q0)) && !(isZero(_normal.dotProduct(v)))){
+            Point3D p= _q0;
+
+            return List.of(p);
+        }
+
+        if(t>0){
+            Point3D p= ray.getPoint(t);
+
+            return List.of(p);
+        }
+        return null;
     }
 }

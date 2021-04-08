@@ -15,7 +15,7 @@ class TubeTest {
         // ============ Equivalence Partitions Tests ==============
         try {
             Ray ray=new Ray(new Point3D(0,0,0),new Vector(0,1,0));
-            new Tube(ray,4);
+            new Tube(4, ray);
         } catch (IllegalArgumentException e) {
             fail("Failed constructing a correct cylinder");
         }
@@ -24,7 +24,7 @@ class TubeTest {
         // Test radius ZERO
         try {
             Ray ray=new Ray(new Point3D(0,0,0),new Vector(0,1,0));
-            new Tube(ray,0);
+            new Tube(0, ray);
         } catch (IllegalArgumentException e) {
             fail("Failed constructing a correct cylinder");
         }
@@ -32,7 +32,7 @@ class TubeTest {
         // Test Vector ZERO
         try {
             Ray ray=new Ray(new Point3D(0,0,0),new Vector(0,0,0));
-            new Tube(ray,3);
+            new Tube(3, ray);
         } catch (IllegalArgumentException e) {
             fail("Failed constructing a correct cylinder");
         }
@@ -44,7 +44,7 @@ class TubeTest {
         // ============ Equivalence Partitions Tests ==============
 
         Ray ray=new Ray(new Point3D(0,1,0),new Vector(0,1,0));
-        Tube tb=new Tube(ray,2);
+        Tube tb=new Tube(2, ray);
         assertEquals(tb.getNormal(new Point3D(0,0,0)),new Vector(0,-1,0));
     }
 }

@@ -4,7 +4,7 @@ import primitives.Point3D;
 import primitives.Vector;
 
 
-public interface Geometry{
+public interface Geometry extends Intersectable{
     /**
      * function that receive a point in a body and return a normal in this point to the body
      *

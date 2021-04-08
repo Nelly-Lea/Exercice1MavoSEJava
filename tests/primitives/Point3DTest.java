@@ -21,6 +21,13 @@ class Point3DTest {
     }
 
     @Test
+    void testSubstract() {
+        //Test substract with points and vectors
+        Point3D p1=new Point3D(1,1,1);
+        Vector result=new Point3D(2,2,2).subtract(p1);
+        assertEquals(new Vector(1,1,1),result,"ERROR in substract function");
+    }
+    @Test
     void distance() {
         Point3D p3= new Point3D(0,0,2.4);
         double result=p3.distance(p2);
@@ -28,6 +35,7 @@ class Point3DTest {
     }
     @Test
     void squaredDistance(){
+
         assertEquals(0, p1.distanceSquared(p2));
     }
 }

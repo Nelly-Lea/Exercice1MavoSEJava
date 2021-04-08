@@ -1,8 +1,10 @@
 package geometries;
 
 import primitives.Point3D;
+import primitives.Ray;
 import primitives.Vector;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static primitives.Util.isZero;
@@ -91,5 +93,75 @@ public class Polygon implements Geometry {
         return plane.getNormal(null);
     }
 
+    @Override
+    public List<Point3D> findIntersections(Ray ray) {
+        Point3D p0=ray.get_p0();
+        Vector v=ray.get_dir();
+        List<Point3D> point3DList=new LinkedList<>();
+        double t=(plane._normal.dotProduct(plane._q0.subtract(p0)))/(plane._normal.dotProduct(v));
+        if((p0.equals(plane._q0)) && !(isZero(plane._normal.dotProduct(v)))){
+            Point3D p= plane._q0;
+
+            point3DList.add(p);
+
+        }
+
+        if(t>0){
+            Point3D p= ray.getPoint(t);
+
+            point3DList.add(p);
+        }
+
+        if(point3DList.isEmpty()) {
+            return null;
+        }
+
+        List<Point3D> l=vertices;
+        List<Vector> vectorList=new LinkedList<>();
+
+        for (Point3D item: vertices)
+        {
+            Vector vec=new Vector(0,0,0);
+            vec=item.subtract(p0);
+            vectorList.add(vec);
+
+        }
+
+
+        List<Vector> normalList=new LinkedList<>();
+        for (int i=0;i<vectorList.size();i++) {
+            Vector n = new Vector(0, 0, 0);
+            if(i<vertices.size()) {
+                n=vectorList.get(i).crossProduct(vectorList.get(i+1)).normalize();
+                normalList.add(n);
+            }
+            else{
+                n=vectorList.get(i).crossProduct(vectorList.get(0));
+                normalList.add(n);
+            }
+
+        }
+
+        if(v.dotProduct(normalList.get(0))>0) {
+            for (Vector item:normalList) {
+                if(v.dotProduct(item)<0)
+                    return null;
+            }
+            return point3DList;
+        }
+        else{
+            if(v.dotProduct(normalList.get(0))<0) {
+                for (Vector item : normalList) {
+                    if (v.dotProduct(item) > 0)
+                        return null;
+                }
+                return point3DList;
+            }
+        }
+
+
+        return null;
+
+    }
 }
 

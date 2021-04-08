@@ -15,7 +15,7 @@ class CylinderTest {
    {
         try {
             Ray ray=new Ray(new Point3D(0,0,0),new Vector(0,1,0));
-            new Cylinder(3,ray,4);
+            new Cylinder(4,ray,3);
         } catch (IllegalArgumentException e) {
             fail("Failed constructing a correct cylinder");
         }
@@ -24,7 +24,7 @@ class CylinderTest {
        // test radius ZERO
            try {
             Ray ray=new Ray(new Point3D(0,0,0),new Vector(0,1,0));
-            new Cylinder(3,ray,0);
+            new Cylinder(0,ray,3);
         } catch (IllegalArgumentException e) {
             fail("Failed constructing a correct cylinder");
         }
@@ -43,7 +43,7 @@ class CylinderTest {
     void getNormal() {
         // ============ Equivalence Partitions Tests ==============
         Ray ray=new Ray(new Point3D(0,0,0),new Vector(0,1,0));
-        Cylinder cy=new Cylinder(3,ray,2);
+        Cylinder cy=new Cylinder(2,ray,3);
         Vector N=cy.getNormal(new Point3D(0,0,0));
         assertEquals(N,new Vector(0,1,0));
     }

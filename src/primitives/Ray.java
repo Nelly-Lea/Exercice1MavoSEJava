@@ -6,9 +6,9 @@ public class Ray {
 
     //contructor checks if the vector reveived dir is normal and if not,it normalizes it
     public Ray(Point3D p0, Vector dir) {
-        if(dir.length()!=1) {
-            dir=dir.normalized();
-        }
+//        if(dir.length()!=1) {
+//            dir=dir.normalized();
+//        }
         _p0 = p0;
         _dir = dir;
     }
@@ -32,4 +32,10 @@ public class Ray {
     public Vector get_dir() {
         return _dir;
     }
+
+    public Point3D getPoint(double t){
+        Point3D p= _p0.add(_dir.scale(t));
+        return p;
+    }
+
 }

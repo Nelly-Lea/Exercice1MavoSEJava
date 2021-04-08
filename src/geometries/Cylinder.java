@@ -11,8 +11,8 @@ import static primitives.Util.*;
 public class Cylinder extends Tube {
     final double _height;
 // constructor
-    public Cylinder(double height, Ray ray,double radius) {
-        super(ray,radius);
+    public Cylinder(double radius, Ray axisRay,double height) {
+        super(radius,axisRay);
         _height = height;
     }
     //return the normal of the cylinder at point p0

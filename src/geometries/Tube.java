@@ -4,27 +4,24 @@ import primitives.Point3D;
 import primitives.Ray;
 import primitives.Vector;
 
-import static primitives.Util.*;
+import java.util.List;
 
-public class Tube {
+public class Tube extends RadialGeometry implements Geometry{
     /* protected */final Ray _axisRay;
-    /* protected */final double _radius;
 
     public Ray getAxisRay() {
         return _axisRay;
     }
 
-    public double getRadius() {
-        return _radius;
-    }
 
     //constructor that receives Ray and radius
-    public Tube(Ray axisRay, double radius) {
+    public Tube(double radius,Ray axisRay ) {
+        super(radius);
         _axisRay = axisRay;
-        if (isZero(radius))
-            throw new IllegalArgumentException("radius cannot be ZERO");
-        else
-            _radius = radius;
+//        if (isZero(radius))
+//            throw new IllegalArgumentException("radius cannot be ZERO");
+//        else
+//            _radius = radius;
 
     }
 
@@ -44,5 +41,10 @@ public class Tube {
                 "axisRay=" + _axisRay +
                 ", radius=" + _radius +
                 '}';
+    }
+
+    @Override
+    public List<Point3D> findIntersections(Ray ray) {
+        return null;
     }
 }

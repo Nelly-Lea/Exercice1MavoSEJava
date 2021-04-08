@@ -105,4 +105,8 @@ public class Point3D {
                 _z._coord + vector._head._z._coord
         );
     }
+
+    public double getX() {
+        return _x._coord;
+    }
 }

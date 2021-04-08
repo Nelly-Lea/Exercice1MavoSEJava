@@ -1,25 +1,31 @@
 package geometries;
 
 import primitives.Point3D;
+import primitives.Ray;
 import primitives.Vector;
-public class Sphere {
+
+import java.util.List;
+
+import static primitives.Util.alignZero;
+
+public class Sphere extends RadialGeometry implements Geometry{
     final Point3D _center;
-    final double _radius;
 
     public Point3D get_center() {
         return _center;
     }
 
-    public double get_radius() {
-        return _radius;
-    }
-//constructor that receives the center point and the radius
-    public Sphere(Point3D center, double radius) {
-        _center = center;
+    /**
+     *  constructor that receives the center point and the radius
+     */
+
+    public Sphere( double radius,Point3D center){
+        super(radius);
         if(radius<=0)
             throw new IllegalArgumentException("radius can't be smaller than 0");
-        _radius = radius;
+        _center = center;
     }
+
     public Vector getNormal(Point3D p0){
         Vector N=p0.subtract(_center);
         N.normalize();
@@ -32,5 +38,47 @@ public class Sphere {
                 "center=" + _center +
                 ", radius=" + _radius +
                 '}';
+    }
+
+    @Override
+    public List<Point3D> findIntersections(Ray ray){
+        Point3D p0=ray.get_p0();
+        Vector v=ray.get_dir();
+
+        if(p0.equals(_center)){
+            throw new IllegalArgumentException("Ray p0 cannot be equals to the center of the sphere");
+        }
+
+        Vector u=_center.subtract(p0);
+
+        double tm=u.dotProduct(v);
+        double d=alignZero(Math.sqrt(u.lengthSquared()-tm*tm));
+
+        if(d>=_radius){
+           return null;
+        }
+
+        double th=Math.sqrt(_radius*_radius-d*d);
+        double t1=tm-th;
+        double t2=tm+th;
+
+        if(t1>0 && t2>0){
+            Point3D p1=ray.getPoint(t1);
+            Point3D p2= ray.getPoint(t2);
+
+            return List.of(p1,p2);
+        }
+        if(t1>0){
+            Point3D p1= ray.getPoint(t1);
+
+            return List.of(p1);
+        }
+
+        if(t2>0){
+            Point3D p2= ray.getPoint(t2);
+
+            return List.of(p2);
+        }
+        return null;
     }
 }
