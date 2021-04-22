@@ -120,7 +120,7 @@ public class Polygon implements Geometry {
 //        List<Vector> vectorList = new LinkedList<>();
 //
 //        for (Point3D item : vertices) {
-//            Vector vec = new Vector(0, 0, 0);
+//            Vector vec = new Vector(1, 0, 0);
 //            vec = item.subtract(p0);
 //            vectorList.add(vec);
 //
@@ -129,7 +129,7 @@ public class Polygon implements Geometry {
 //
 //        List<Vector> normalList = new LinkedList<>();
 //        for (int i = 0; i < vectorList.size(); i++) {
-//            Vector n = new Vector(0, 0, 0);
+//            Vector n = new Vector(1, 0, 0);
 //            if (i < vertices.size()) {
 //                n = vectorList.get(i).crossProduct(vectorList.get(i + 1)).normalize();
 //                normalList.add(n);

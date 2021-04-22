@@ -6,7 +6,6 @@ import primitives.Vector;
 
 import java.util.List;
 
-import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 public class Plane implements Geometry{
@@ -71,60 +70,24 @@ public class Plane implements Geometry{
 
     @Override
     public List<Point3D> findIntersections(Ray ray) {
-//        Point3D p0=ray.get_p0();
-//        Vector v=ray.get_dir();
-//        if(isZero(_normal.dotProduct(v))){
-//            return null;
-//        }
-//        double t=(_normal.dotProduct(_q0.subtract(p0)))/(_normal.dotProduct(v));
-//        if((p0.equals(_q0)) && !(isZero(_normal.dotProduct(v)))){
-////            Point3D p= _q0;
-////
-////            return List.of(p);
-//            return null;
-//        }
-//
-//        if(t>0){
-//            Point3D p= ray.getPoint(t);
+        Point3D p0=ray.get_p0();
+        Vector v=ray.get_dir();
+        if(isZero(_normal.dotProduct(v))){
+            return null;
+        }
+        double t=(_normal.dotProduct(_q0.subtract(p0)))/(_normal.dotProduct(v));
+        if((p0.equals(_q0)) && !(isZero(_normal.dotProduct(v)))){
+//            Point3D p= _q0;
 //
 //            return List.of(p);
-//        }
-//        return null;
-        Point3D P0 = ray.get_p0();
-        Vector v = ray.get_dir();
-
-        Vector n = _normal;
-
-        if(_q0.equals(P0)){
-            return  null;
-        }
-
-        Vector P0_Q0 = _q0.subtract(P0);
-
-        //numerator
-        double nP0Q0  = alignZero(n.dotProduct(P0_Q0));
-
-        //
-        if (isZero(nP0Q0 )){
             return null;
         }
 
-        //denominator
-        double nv = alignZero(n.dotProduct(v));
+        if(t>0){
+            Point3D p= ray.getPoint(t);
 
-        // ray is lying in the plane axis
-        if(isZero(nv)){
-            return null;
+            return List.of(p);
         }
-
-        double  t = alignZero(nP0Q0  / nv);
-
-        if (t <=0){
-            return  null;
-        }
-
-        Point3D point = ray.getPoint(t);
-
-        return List.of(point);
+        return null;
     }
 }
