@@ -20,50 +20,70 @@ public class Camera {
         _p0 = p0;
         _vTo = vTo.normalized();
         _vUp = vUp.normalized();
-        if(_vTo.dotProduct(_vUp)==0){
+        if (!isZero(_vTo.dotProduct(_vUp))) {
             throw new IllegalArgumentException("vUp is not orthogonal to vTo ");
         }
-        _vRight=_vTo.crossProduct(_vUp);
+        _vRight = _vTo.crossProduct(_vUp);
     }
 
     /**
      * borrowing from Builder pattern
+     *
      * @param width
      * @param height
      * @return
      */
-    public Camera setViewPlaneSize(double width, double height){
-        _width=width;
-        _height=height;
+    public Camera setViewPlaneSize(double width, double height) {
+        _width = width;
+        _height = height;
         return this;
     }
 
-    public Camera setDistance(double distance){
-        _distance=distance;
+    public Camera setDistance(double distance) {
+        _distance = distance;
         return this;
     }
 
-    public Ray constructRayThroughPixel(int nX, int nY, int j, int i){
-      Point3D Pc=_p0.add(_vTo.scale(_distance));
 
-      double Ry=_height/nY;
-      double Rx=_width/nX;
+    public Ray constructRayThroughPixel(int nX, int nY, int j, int i) {
+//        double rX=vpWidth/nX;
+//        double rY=vpHeight/nY;
+//        double xJ=(j-(nX-1)/2d)*rX;
+//        double yIminus=(i-(nY-1)/2d)*rY;
+//
+//        Point3D pIJ=_p0.add(_vTo.scale(vpDistance))
+        Point3D Pc = _p0.add(_vTo.scale(_distance));
 
-      double Yi=-(i-(nY-1)/2)*Ry;
-      double Xj=-(j-(nX-1)/2)*Rx;
+        double Ry = _height / nY;
+        double Rx = _width / nX;
 
-      Point3D Pij;
-      if(isZero(Yi) && isZero(Xj)){
-          return new Ray(_p0,Pc.subtract(_p0));
-      }
+        double Yi = -(i - (nY - 1) / 2d) * Ry;
+        double Xj = (j - (nX - 1) / 2d) * Rx;
 
-      Vector deltaX=_vRight.scale(Xj);
-      Vector deltaY=_vUp.scale(Yi);
+        Point3D Pij = Pc;
+//      if(Xj!=0){
+//          Pij=Pij.add(_vRight.scale(Xj));
+//      }
+//      if(Yi!=0){
+//          Pij=Pij.add(_vUp.scale(Yi));
+//      }
 
-      Pij=Pc.add(deltaX.add(deltaY));
-      Vector Vij=Pij.subtract(_p0);
+        if (isZero(Yi) && isZero(Xj)) {
+            return new Ray(_p0, Pij.subtract(_p0));
+        }
 
-      return new Ray(_p0,Vij);
+        if (isZero(Xj)) {
+            Pij = Pc.add(_vUp.scale(Yi));
+            return new Ray(_p0, Pij.subtract((_p0)));
+        }
+
+        if (isZero(Yi)) {
+            Pij = Pc.add(_vRight.scale(Xj));
+            return new Ray(_p0, Pij.subtract((_p0)));
+        }
+
+        Pij = Pc.add(_vRight.scale(Xj).add(_vUp.scale(Yi)));
+        return new Ray(_p0, Pij.subtract(_p0));
 
 
     }

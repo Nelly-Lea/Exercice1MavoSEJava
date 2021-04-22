@@ -38,4 +38,11 @@ public class Ray {
         return p;
     }
 
+    @Override
+    public String toString() {
+        return "Ray{" +
+                "_p0=" + _p0 +
+                ", _dir=" + _dir +
+                '}';
+    }
 }

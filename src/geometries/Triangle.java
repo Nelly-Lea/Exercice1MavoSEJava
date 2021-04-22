@@ -67,7 +67,7 @@ public class Triangle extends Polygon{
 //        }
 //
 //        return null;
-        return findIntersections(ray);
+        return super.findIntersections(ray);
 
     }
 }
