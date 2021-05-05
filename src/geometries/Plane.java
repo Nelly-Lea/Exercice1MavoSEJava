@@ -34,7 +34,7 @@ public class Plane implements Geometry{
     // constructor that receives point that belongs to the plane and normal of the plane
     public Plane(Point3D q0, Vector normal) {
         _q0 = q0;
-        _normal = normal;
+        _normal = normal.normalized();
      }
 
     //constructor that receives 3 points and do a plane from these 3 points
@@ -75,13 +75,14 @@ public class Plane implements Geometry{
         if(isZero(_normal.dotProduct(v))){
             return null;
         }
-        double t=(_normal.dotProduct(_q0.subtract(p0)))/(_normal.dotProduct(v));
         if((p0.equals(_q0)) && !(isZero(_normal.dotProduct(v)))){
 //            Point3D p= _q0;
 //
 //            return List.of(p);
             return null;
         }
+        double t=(_normal.dotProduct(_q0.subtract(p0)))/(_normal.dotProduct(v));
+
 
         if(t>0){
             Point3D p= ray.getPoint(t);

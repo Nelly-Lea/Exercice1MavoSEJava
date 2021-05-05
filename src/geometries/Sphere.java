@@ -51,16 +51,16 @@ public class Sphere extends RadialGeometry implements Geometry{
 
         Vector u=_center.subtract(p0);
 
-        double tm=v.dotProduct(u);
-        double d=alignZero(Math.sqrt(u.lengthSquared()-tm*tm));
+        double tm=alignZero(v.dotProduct(u));
+        double d=alignZero(Math.sqrt(u.lengthSquared()-(tm*tm)));
 
         if(d>=_radius){
            return null;
         }
 
-        double th=Math.sqrt(_radius*_radius-d*d);
-        double t1=tm-th;
-        double t2=tm+th;
+        double th=alignZero(Math.sqrt(_radius*_radius-d*d));
+        double t1=alignZero(tm-th);
+        double t2=alignZero(tm+th);
 
         if(t1>0 && t2>0){
             Point3D p1=ray.getPoint(t1);
