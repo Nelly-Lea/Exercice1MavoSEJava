@@ -29,13 +29,13 @@ public class Ray {
             return null;
         }
         for(Point3D p:pointsList){
-            double temp=p.distance(_p0);
+            double temp=p.distance(_p0);// temp is the distance between a point in the list and the _p0 of the ray
             if(temp<closestDistance){
-                closestDistance=temp;
+                closestDistance=temp;// closestDistance is the minimum temp
                 result=p;
             }
         }
-        return result;
+        return result; //result is the closest point to the ray
 
     }
 

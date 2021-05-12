@@ -7,6 +7,9 @@ class ImageWriterTest {
 
 
     @Test
+    /**
+     *Produce a scene into a png image with a black grid and blue pixels
+     */
     void writeToImage() {
         ImageWriter imageWriter=new ImageWriter("testblue",800,500);
         for(int i=0;i<800;i++){

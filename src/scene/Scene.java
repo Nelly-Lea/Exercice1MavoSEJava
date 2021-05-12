@@ -10,6 +10,10 @@ public class Scene {
     public AmbientLight ambientLight=new AmbientLight(new Color(192, 192, 192),1.d);
     public Geometries geometries=null;
 
+    /**
+     * constructor that creates a scene
+     * @param name
+     */
     public Scene(String name) {
         _name = name;
         geometries = new Geometries();

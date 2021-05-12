@@ -30,10 +30,15 @@ public class Render {
 
     public Render setRayTracer(RayTracerBase rayTracer) {
         _rayTracerBase = rayTracer;
+
         return this;
     }
 
+    /**
+     * constructor that creates a ray for every pixel and return the color of every pixel
+     */
     public void renderImage() {
+        //we check that all fields are not null
         try {
             if (_imageWriter == null) {
                 throw new MissingResourceException("missing ressource", ImageWriter.class.getName(), "");
@@ -60,8 +65,36 @@ public class Render {
             }
 
         }catch(MissingResourceException e){
-            throw new UnsupportedOperationException("Not implemented yet"+e.getClassName());
+            throw new UnsupportedOperationException("Not implemented yet "+e.getClassName());
         }
     }
+
+    public void printGrid(int interval, Color color) {
+
+        if(_imageWriter==null){
+            throw new MissingResourceException("empty field","ImageWriter","_imageWriter");
+        }
+        int nX = _imageWriter.getNx();
+        int nY = _imageWriter.getNy();
+        for (int i = 0; i < nY; i++) {
+            for (int j = 0; j < nX; j++) {
+                if (i % interval == 0 || j % interval == 0) {
+                        _imageWriter.writePixel(j, i, color);
+                }
+            }
+        }
+    }
+
+    /**
+     * constructor checks if the imagewriter is null else call the constructor
+     */
+    public void writeToImage(){
+        if(_imageWriter==null){
+            throw new MissingResourceException("empty field","ImageWriter","_imageWriter");
+        }
+        _imageWriter.writeToImage();
+
+    }
+
 }
 
