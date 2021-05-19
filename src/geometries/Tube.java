@@ -6,8 +6,9 @@ import primitives.Vector;
 
 import java.util.List;
 
-public class Tube extends RadialGeometry implements Geometry{
+public class Tube extends Geometry {
     /* protected */final Ray _axisRay;
+    double _radius;
 
     public Ray getAxisRay() {
         return _axisRay;
@@ -15,8 +16,10 @@ public class Tube extends RadialGeometry implements Geometry{
 
 
     //constructor that receives Ray and radius
-    public Tube(double radius,Ray axisRay ) {
-        super(radius);
+    public Tube(double radius, Ray axisRay) {
+        if (radius <= 0)
+            throw new IllegalArgumentException("radius can't be smaller than 0");
+        _radius = radius;
         _axisRay = axisRay;
 //        if (isZero(radius))
 //            throw new IllegalArgumentException("radius cannot be ZERO");
@@ -44,7 +47,9 @@ public class Tube extends RadialGeometry implements Geometry{
     }
 
     @Override
-    public List<Point3D> findIntersections(Ray ray) {
+    public List<GeoPoint> findGeoIntersections(Ray ray) {
         return null;
     }
+
+
 }

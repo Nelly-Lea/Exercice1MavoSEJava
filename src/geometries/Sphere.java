@@ -8,9 +8,9 @@ import java.util.List;
 
 import static primitives.Util.alignZero;
 
-public class Sphere extends RadialGeometry implements Geometry{
+public class Sphere extends Geometry{
     final Point3D _center;
-
+    double _radius;
     public Point3D get_center() {
         return _center;
     }
@@ -20,9 +20,9 @@ public class Sphere extends RadialGeometry implements Geometry{
      */
 
     public Sphere( double radius,Point3D center){
-        super(radius);
         if(radius<=0)
             throw new IllegalArgumentException("radius can't be smaller than 0");
+        _radius=radius;
         _center = center;
     }
 
@@ -41,7 +41,7 @@ public class Sphere extends RadialGeometry implements Geometry{
     }
 
     @Override
-    public List<Point3D> findIntersections(Ray ray){
+    public List<GeoPoint> findGeoIntersections(Ray ray) {
         Point3D p0=ray.get_p0();
         Vector v=ray.get_dir();
 
@@ -55,7 +55,7 @@ public class Sphere extends RadialGeometry implements Geometry{
         double d=alignZero(Math.sqrt(u.lengthSquared()-(tm*tm)));
 
         if(d>=_radius){
-           return null;
+            return null;
         }
 
         double th=alignZero(Math.sqrt(_radius*_radius-d*d));
@@ -66,19 +66,22 @@ public class Sphere extends RadialGeometry implements Geometry{
             Point3D p1=ray.getPoint(t1);
             Point3D p2= ray.getPoint(t2);
 
-            return List.of(p1,p2);
+            return List.of(new GeoPoint(this,p1), new GeoPoint(this,p2));
         }
         if(t1>0){
             Point3D p1= ray.getPoint(t1);
 
-            return List.of(p1);
+            return List.of(new GeoPoint(this,p1));
         }
 
         if(t2>0){
             Point3D p2= ray.getPoint(t2);
 
-            return List.of(p2);
+            return List.of(new GeoPoint(this,p2));
         }
         return null;
     }
+
+
+
 }

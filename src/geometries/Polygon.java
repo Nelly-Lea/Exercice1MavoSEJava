@@ -15,7 +15,7 @@ import static primitives.Util.isZero;
  *
  * @author Dan
  */
-public class Polygon implements Geometry {
+public class Polygon extends Geometry {
     /**
      * List of polygon's vertices
      */
@@ -94,73 +94,8 @@ public class Polygon implements Geometry {
     }
 
     @Override
-    public List<Point3D> findIntersections(Ray ray) {
-//        Point3D p0 = ray.get_p0();
-//        Vector v = ray.get_dir();
-//        List<Point3D> point3DList = new LinkedList<>();
-//        double t = (plane._normal.dotProduct(plane._q0.subtract(p0))) / (plane._normal.dotProduct(v));
-//        if ((p0.equals(plane._q0)) && !(isZero(plane._normal.dotProduct(v)))) {
-//            Point3D p = plane._q0;
-//
-//            point3DList.add(p);
-//
-//        }
-//
-//        if (t > 0) {
-//            Point3D p = ray.getPoint(t);
-//
-//            point3DList.add(p);
-//        }
-//
-//        if (point3DList.isEmpty()) {
-//            return null;
-//        }
-//
-//        List<Point3D> l = vertices;
-//        List<Vector> vectorList = new LinkedList<>();
-//
-//        for (Point3D item : vertices) {
-//            Vector vec = new Vector(1, 0, 0);
-//            vec = item.subtract(p0);
-//            vectorList.add(vec);
-//
-//        }
-//
-//
-//        List<Vector> normalList = new LinkedList<>();
-//        for (int i = 0; i < vectorList.size(); i++) {
-//            Vector n = new Vector(1, 0, 0);
-//            if (i < vertices.size()) {
-//                n = vectorList.get(i).crossProduct(vectorList.get(i + 1)).normalize();
-//                normalList.add(n);
-//            } else {
-//                n = vectorList.get(i).crossProduct(vectorList.get(0));
-//                normalList.add(n);
-//            }
-//
-//        }
-//
-//        if (v.dotProduct(normalList.get(0)) > 0) {
-//            for (Vector item : normalList) {
-//                if (v.dotProduct(item) < 0)
-//                    return null;
-//            }
-//            return point3DList;
-//        } else {
-//            if (v.dotProduct(normalList.get(0)) < 0) {
-//                for (Vector item : normalList) {
-//                    if (v.dotProduct(item) > 0)
-//                        return null;
-//                }
-//                return point3DList;
-//            }
-//        }
-//
-//
-//        return null;
-
-        List<Point3D> result = plane.findIntersections(ray);
-
+    public List<GeoPoint> findGeoIntersections(Ray ray) {
+        List<GeoPoint> result = plane.findGeoIntersections(ray);
         if (result == null) {
             return result;
         }
@@ -196,8 +131,117 @@ public class Polygon implements Geometry {
                 return null;
             }
         }
-
-        return result;
+        Point3D planeGo=plane.findGeoIntersections(ray).get(0).point;
+        return List.of(new GeoPoint(this,planeGo));
+        //return result;
     }
+
+
+//    @Override
+//    public List<Point3D> findIntersections(Ray ray) {
+////        Point3D p0 = ray.get_p0();
+////        Vector v = ray.get_dir();
+////        List<Point3D> point3DList = new LinkedList<>();
+////        double t = (plane._normal.dotProduct(plane._q0.subtract(p0))) / (plane._normal.dotProduct(v));
+////        if ((p0.equals(plane._q0)) && !(isZero(plane._normal.dotProduct(v)))) {
+////            Point3D p = plane._q0;
+////
+////            point3DList.add(p);
+////
+////        }
+////
+////        if (t > 0) {
+////            Point3D p = ray.getPoint(t);
+////
+////            point3DList.add(p);
+////        }
+////
+////        if (point3DList.isEmpty()) {
+////            return null;
+////        }
+////
+////        List<Point3D> l = vertices;
+////        List<Vector> vectorList = new LinkedList<>();
+////
+////        for (Point3D item : vertices) {
+////            Vector vec = new Vector(1, 0, 0);
+////            vec = item.subtract(p0);
+////            vectorList.add(vec);
+////
+////        }
+////
+////
+////        List<Vector> normalList = new LinkedList<>();
+////        for (int i = 0; i < vectorList.size(); i++) {
+////            Vector n = new Vector(1, 0, 0);
+////            if (i < vertices.size()) {
+////                n = vectorList.get(i).crossProduct(vectorList.get(i + 1)).normalize();
+////                normalList.add(n);
+////            } else {
+////                n = vectorList.get(i).crossProduct(vectorList.get(0));
+////                normalList.add(n);
+////            }
+////
+////        }
+////
+////        if (v.dotProduct(normalList.get(0)) > 0) {
+////            for (Vector item : normalList) {
+////                if (v.dotProduct(item) < 0)
+////                    return null;
+////            }
+////            return point3DList;
+////        } else {
+////            if (v.dotProduct(normalList.get(0)) < 0) {
+////                for (Vector item : normalList) {
+////                    if (v.dotProduct(item) > 0)
+////                        return null;
+////                }
+////                return point3DList;
+////            }
+////        }
+////
+////
+////        return null;
+//
+//        List<Point3D> result = plane.findIntersections(ray);
+//
+//        if (result == null) {
+//            return result;
+//        }
+//
+//        Point3D P0 = ray.get_p0();
+//        Vector v = ray.get_dir();
+//
+//        Point3D P1 =vertices.get(1);
+//        Point3D P2 = vertices.get(0);
+//
+//        Vector v1 = P1.subtract(P0);
+//        Vector v2 = P2.subtract(P0);
+//
+//        double sign = alignZero(v.dotProduct(v1.crossProduct(v2)));
+//
+//        if (isZero(sign)) {
+//            return null;
+//        }
+//
+//        boolean positive = sign > 0;
+//
+//        //iterate through all vertices of the polygon
+//        for (int i = vertices.size() - 1; i > 0; --i) {
+//            v1 = v2;
+//            v2 = vertices.get(i).subtract(P0);
+//
+//            sign = alignZero(v.dotProduct(v1.crossProduct(v2)));
+//            if (isZero(sign)) {
+//                return null;
+//            }
+//
+//            if (positive != (sign > 0)) {
+//                return null;
+//            }
+//        }
+//
+//        return result;
+//    }
 }
 

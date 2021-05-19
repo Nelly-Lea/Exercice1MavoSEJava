@@ -3,23 +3,17 @@ package renderer;
 import elements.Camera;
 import primitives.Color;
 import primitives.Ray;
-import scene.Scene;
 
 import java.util.MissingResourceException;
 
 public class Render {
     ImageWriter _imageWriter = null;
-    Scene _scene = null;
+
     Camera _camera = null;
     RayTracerBase _rayTracerBase=null;
 
     public Render setImageWriter(ImageWriter imageWriter) {
         _imageWriter = imageWriter;
-        return this;
-    }
-
-    public Render setScene(Scene scene) {
-        _scene = scene;
         return this;
     }
 
@@ -42,9 +36,6 @@ public class Render {
         try {
             if (_imageWriter == null) {
                 throw new MissingResourceException("missing ressource", ImageWriter.class.getName(), "");
-            }
-            if (_scene == null) {
-                throw new MissingResourceException("missing ressource", Scene.class.getName(), "");
             }
             if (_camera == null) {
                 throw new MissingResourceException("missing ressource", Camera.class.getName(), "");

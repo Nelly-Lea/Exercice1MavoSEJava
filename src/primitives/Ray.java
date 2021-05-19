@@ -2,6 +2,8 @@ package primitives;
 
 import java.util.List;
 
+import static geometries.Intersectable.GeoPoint;
+
 public class Ray {
     final Point3D _p0;
     final Vector _dir;
@@ -70,5 +72,25 @@ public class Ray {
                 "_p0=" + _p0 +
                 ", _dir=" + _dir +
                 '}';
+    }
+
+    public GeoPoint findClosestGeoPoint(List<GeoPoint> geoPointList)
+    {
+        GeoPoint result=null;
+        double closestDistance=Double.MAX_VALUE;
+
+        if(geoPointList==null){
+            return null;
+        }
+        for(GeoPoint geo:geoPointList){
+            double temp=geo.point.distance(_p0);// temp is the distance between a point in the list and the _p0 of the ray
+            if(temp<closestDistance){
+                closestDistance=temp;// closestDistance is the minimum temp
+                result=geo;
+            }
+        }
+        return result; //result is the closest point to the ray
+
+
     }
 }

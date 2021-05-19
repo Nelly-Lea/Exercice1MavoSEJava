@@ -3,6 +3,9 @@ package geometries;
 import primitives.Point3D;
 import primitives.Ray;
 import primitives.Vector;
+
+import java.util.List;
+
 import static primitives.Util.*;
 
 /*
@@ -47,5 +50,8 @@ public class Cylinder extends Tube {
                 ", axisRay=" + _axisRay +
                 ", radius=" + _radius +
                 '}';
+    }
+    public List<GeoPoint> findGeoIntersections(Ray ray) {
+        return null;
     }
 }
