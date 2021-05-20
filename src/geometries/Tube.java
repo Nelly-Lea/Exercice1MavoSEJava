@@ -6,9 +6,8 @@ import primitives.Vector;
 
 import java.util.List;
 
-public class Tube extends Geometry {
+public class Tube extends RadialGeometry {
     /* protected */final Ray _axisRay;
-    double _radius;
 
     public Ray getAxisRay() {
         return _axisRay;
@@ -17,9 +16,7 @@ public class Tube extends Geometry {
 
     //constructor that receives Ray and radius
     public Tube(double radius, Ray axisRay) {
-        if (radius <= 0)
-            throw new IllegalArgumentException("radius can't be smaller than 0");
-        _radius = radius;
+        super(radius);
         _axisRay = axisRay;
 //        if (isZero(radius))
 //            throw new IllegalArgumentException("radius cannot be ZERO");

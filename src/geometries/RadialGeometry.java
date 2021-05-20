@@ -3,7 +3,7 @@ package geometries;
 import static primitives.Util.isZero;
 
 
-public abstract class RadialGeometry {
+public abstract class RadialGeometry extends Geometry{
     final protected double _radius;
 
     public RadialGeometry(double radius) {

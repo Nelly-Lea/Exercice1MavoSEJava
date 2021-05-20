@@ -15,6 +15,7 @@ import static primitives.Util.alignZero;
 public class BasicRayTracer extends RayTracerBase {
     /**
      * constructor calls father's constructor
+     *
      * @param scene
      */
     public BasicRayTracer(Scene scene) {
@@ -22,28 +23,28 @@ public class BasicRayTracer extends RayTracerBase {
     }
 
     /**
-     *  traceRay receives a ray return a color for pixel. If there are intersections with the ray
-     *  calculs the color of the closest point else it return the background color
+     * traceRay receives a ray return a color for pixel. If there are intersections with the ray
+     * calculs the color of the closest point else it return the background color
+     *
      * @param ray
      * @return color of pixel
      */
-    public Color traceRay (Ray ray)
-    {
-        List<GeoPoint> intersections =_scene.geometries.findGeoIntersections(ray);
+    public Color traceRay(Ray ray) {
+        List<GeoPoint> intersections = _scene.geometries.findGeoIntersections(ray);
 
-        if(intersections!=null) {
+        if (intersections != null) {
             GeoPoint closestPoint = ray.findClosestGeoPoint(intersections);
-            return calcColor(closestPoint,ray);
+            return calcColor(closestPoint, ray);
         }
         return _scene.background;
     }
-    public  Color calcColor(GeoPoint Gpoint,Ray ray)
-    {
-       //return  _scene.ambientLight.getIntensity().add(point.geometry.getEmmission());
-       return _scene.ambientLight.getIntensity()
-               .add(Gpoint.geometry.getEmmission())
-       //add calculated light contribution from all light sources
-        .add(calcLocalEffects(Gpoint,ray));
+
+    public Color calcColor(GeoPoint Gpoint, Ray ray) {
+        //return  _scene.ambientLight.getIntensity().add(point.geometry.getEmmission());
+        return _scene.ambientLight.getIntensity()
+                .add(Gpoint.geometry.getEmmission())
+                //add calculated light contribution from all light sources
+                .add(calcLocalEffects(Gpoint, ray));
 
     }
 
@@ -59,29 +60,34 @@ public class BasicRayTracer extends RayTracerBase {
         double kd = material.Kd;
         double ks = material.Ks;
         Color color = Color.BLACK;
-        for (LightSource lightSource : _scene._lights) {
+        for (LightSource lightSource : _scene.lights) {
             Vector l = lightSource.getL(gpoint.point);
             double nl = alignZero(n.dotProduct(l));
             if (nl * nv > 0) { // sign(nl) == sing(nv)
                 Color lightIntensity = lightSource.getIntensity(gpoint.point);
-                double das=calcDiffusive(kd, l, n, lightIntensity) +(calcSpecular(ks, l, n, v, nShininess, lightIntensity));
-
-                if(das!=0){
-                    Color diffuseAndSpecular=lightIntensity.scale(das);
-                    color=color.add(diffuseAndSpecular);
+//                color = color.add(calcDiffusive(kd, l, n, lightIntensity),
+//                        calcSpecular(ks, l, n, v, nShininess, lightIntensity));
+                double das = calcDiffusive(kd, l, n,lightIntensity) + (calcSpecular(ks, l, n, v, nShininess,lightIntensity));
+                if (das != 0) {
+                    Color diffuseAndSpecular = lightIntensity.scale(das);
+                    color = color.add(diffuseAndSpecular);
                 }
             }
         }
         return color;
     }
 
+
     private double calcDiffusive(double kd, Vector l, Vector n, Color lightIntensity) {
-        double ln=Math.abs(l.dotProduct(n));
-        return kd*ln;
+        double ln = Math.abs(l.dotProduct(n));
+        return kd * ln;
     }
 
     private double calcSpecular(double ks, Vector l, Vector n, Vector v, int nShininess, Color lightIntensity) {
-
+        double ln = l.dotProduct(n);
+        Vector r = l.subtract(n.scale(ln * -2));
+        double minusVR = v.scale(-1).dotProduct(r);
+        return ks * Math.max(0, Math.pow(minusVR, nShininess));
     }
 
 

@@ -8,9 +8,8 @@ import java.util.List;
 
 import static primitives.Util.alignZero;
 
-public class Sphere extends Geometry{
+public class Sphere extends RadialGeometry{
     final Point3D _center;
-    double _radius;
     public Point3D get_center() {
         return _center;
     }
@@ -20,9 +19,7 @@ public class Sphere extends Geometry{
      */
 
     public Sphere( double radius,Point3D center){
-        if(radius<=0)
-            throw new IllegalArgumentException("radius can't be smaller than 0");
-        _radius=radius;
+        super(radius);
         _center = center;
     }
 

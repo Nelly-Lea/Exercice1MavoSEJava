@@ -13,10 +13,10 @@ public class Scene {
     public Color background=Color.BLACK;
     public AmbientLight ambientLight=new AmbientLight(new Color(192, 192, 192),1.d);
     public Geometries geometries=null;
-    public List<LightSource> _lights=new LinkedList<>();
+    public List<LightSource> lights =new LinkedList<>();
 
     public Scene setLights(List<LightSource> lights) {
-        _lights = lights;
+        this.lights = lights;
         return this;
     }
 
