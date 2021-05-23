@@ -74,10 +74,16 @@ public class Ray {
                 '}';
     }
 
+    /**
+     * find the closest point tin geopoint list
+     * @param geoPointList list of geopoint
+     * @return closest geopoint
+     */
+
     public GeoPoint findClosestGeoPoint(List<GeoPoint> geoPointList)
     {
         GeoPoint result=null;
-        double closestDistance=Double.MAX_VALUE;
+        double closestDistance=Double.MAX_VALUE;// closestDistance = a big value
 
         if(geoPointList==null){
             return null;

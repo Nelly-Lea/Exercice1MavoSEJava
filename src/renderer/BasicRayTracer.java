@@ -65,29 +65,48 @@ public class BasicRayTracer extends RayTracerBase {
             double nl = alignZero(n.dotProduct(l));
             if (nl * nv > 0) { // sign(nl) == sing(nv)
                 Color lightIntensity = lightSource.getIntensity(gpoint.point);
-//                color = color.add(calcDiffusive(kd, l, n, lightIntensity),
-//                        calcSpecular(ks, l, n, v, nShininess, lightIntensity));
-                double das = calcDiffusive(kd, l, n,lightIntensity) + (calcSpecular(ks, l, n, v, nShininess,lightIntensity));
-                if (das != 0) {
-                    Color diffuseAndSpecular = lightIntensity.scale(das);
-                    color = color.add(diffuseAndSpecular);
-                }
+                color = color.add(calcDiffusive(kd, l, n, lightIntensity),
+                        calcSpecular(ks, l, n, v, nShininess, lightIntensity));
+                color=color.add(gpoint.geometry.getEmmission());
+
             }
         }
         return color;
     }
 
 
-    private double calcDiffusive(double kd, Vector l, Vector n, Color lightIntensity) {
+    /**
+     * this function calculates a part of Phong formula
+     * @param kd
+     * @param l
+     * @param n
+     * @param lightIntensity
+     * @return the result:  kd*|l*n|*Il
+     */
+
+    private Color calcDiffusive(double kd, Vector l, Vector n, Color lightIntensity) {
+
         double ln = Math.abs(l.dotProduct(n));
-        return kd * ln;
+        return lightIntensity.scale(kd*ln);// kd*|l*n|*Il
+
     }
 
-    private double calcSpecular(double ks, Vector l, Vector n, Vector v, int nShininess, Color lightIntensity) {
+    /**
+     * this function calculates a part of Phong formula
+     * @param ks
+     * @param l
+     * @param n
+     * @param v
+     * @param nShininess
+     * @param lightIntensity
+     * @return the result: ks*(max(0,-v*r))^nShininess*Il
+     */
+
+    private Color calcSpecular(double ks, Vector l, Vector n, Vector v, int nShininess, Color lightIntensity) {
         double ln = l.dotProduct(n);
-        Vector r = l.subtract(n.scale(ln * -2));
+        Vector r = l.subtract(n.scale(ln * 2));
         double minusVR = v.scale(-1).dotProduct(r);
-        return ks * Math.max(0, Math.pow(minusVR, nShininess));
+        return lightIntensity.scale(ks * Math.max(0, Math.pow(minusVR, nShininess)));//ks*(max(0,-v*r))^nShininess*Il
     }
 
 

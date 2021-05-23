@@ -15,6 +15,11 @@ public class Scene {
     public Geometries geometries=null;
     public List<LightSource> lights =new LinkedList<>();
 
+    /**
+     * this setter receives a list of LightSource and put in the field light the list
+     * @param lights
+     * @return a Scene object with the list of LightSource
+     */
     public Scene setLights(List<LightSource> lights) {
         this.lights = lights;
         return this;

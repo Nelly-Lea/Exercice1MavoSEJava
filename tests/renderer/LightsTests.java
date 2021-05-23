@@ -144,4 +144,41 @@ public class LightsTests {
         render.writeToImage();
     }
 
+
+    /**
+     * Produce a picture of a two triangles lighted by a orange point light
+     */
+    @Test
+    public void trianglesPoint2() {
+        scene2.geometries.add(triangle1.setMaterial(new Material().setKd(0.75).setKs(0.75).setShininess(300)), //
+                triangle2.setMaterial(new Material().setKd(0.75).setKs(0.75).setShininess(300)));
+        scene2.lights.add(new PointLight(new Color(500, 248, 0), new Point3D(20, -5, -60)) //
+                .setKl(0.000075).setKq(0.000075));
+
+        ImageWriter imageWriter = new ImageWriter("lightTrianglesPoint2", 500, 500);
+        Render render = new Render()//
+                .setImageWriter(imageWriter) //
+                .setCamera(camera2) //
+                .setRayTracer(new BasicRayTracer(scene2));
+        render.renderImage();
+        render.writeToImage();
+    }
+
+    /**
+     * Produce a picture of a sphere lighted by a pink spot light
+     */
+    @Test
+    public void sphereSpot2() {
+        scene1.geometries.add(sphere);
+        scene1.lights.add(new SpotLight(new Color(413, 20, 427), new Point3D(-60, -60, 60), new Vector(2, 2, 2)) //
+                .setKl(0.0000075).setKq(0.0000000075));
+
+        ImageWriter imageWriter = new ImageWriter("lightSphereSpot2", 500, 500);
+        Render render = new Render()//
+                .setImageWriter(imageWriter) //
+                .setCamera(camera1) //
+                .setRayTracer(new BasicRayTracer(scene1));
+        render.renderImage();
+        render.writeToImage();
+    }
 }

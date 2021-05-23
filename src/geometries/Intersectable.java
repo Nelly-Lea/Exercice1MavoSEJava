@@ -13,10 +13,16 @@ import java.util.stream.Collectors;
 public interface Intersectable {
     //List<Point3D> findIntersections(Ray ray);
     public List<GeoPoint> findGeoIntersections(Ray ray);
+    /**
+     * this class contains a geometry and point on this geometry
+     */
     public static class GeoPoint {
         public Geometry geometry;
         public Point3D point;
 
+        /**
+         * constructor of GeoPoint
+         */
         public GeoPoint(Geometry geometry, Point3D point) {
             this.geometry = geometry;
             this.point = point;

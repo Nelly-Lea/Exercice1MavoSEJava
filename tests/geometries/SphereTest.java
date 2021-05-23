@@ -25,7 +25,7 @@ class SphereTest {
 
         // Test radius ZERO
         try {
-            new Sphere(0, new Point3D(0, 1, 0));
+            new Sphere(7, new Point3D(0, 1, 0));
         } catch (IllegalArgumentException e) {
             fail("Failed constructing a correct sphere");
         }
