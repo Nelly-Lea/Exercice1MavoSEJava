@@ -1,5 +1,6 @@
 package geometries;
 
+import primitives.Point3D;
 import primitives.Ray;
 
 import java.util.Arrays;
@@ -15,7 +16,7 @@ public class Geometries implements Intersectable {
     }
 
     public Geometries(){
-       //nothing to add
+        //nothing to add
     }
 
     public void add(Intersectable... intersectables){
@@ -27,13 +28,18 @@ public class Geometries implements Intersectable {
         _intersectables.removeAll(Arrays.asList(intersectables));
     }
 
+//    @Override
+//    public List<GeoPoint> findGeoIntersections(Ray ray) {
+//        return null;
+//    }
+
     @Override
-    public List<GeoPoint> findGeoIntersections(Ray ray) {
+    public List<GeoPoint> findGeoIntersections(Ray ray, double maxDistance) { ///
         List<GeoPoint> result= null;
 
         //we pass on all geometries intersectables we check if there is points of intersection. If there is any, we add intersection point in a list
         for (Intersectable item : _intersectables) {
-            List<GeoPoint> itemPoints = item.findGeoIntersections(ray);
+            List<GeoPoint> itemPoints = item.findGeoIntersections(ray,maxDistance);///
             if(itemPoints!=null){
                 if(result==null){
                     result=new LinkedList<>();
@@ -44,4 +50,7 @@ public class Geometries implements Intersectable {
 
         return result;
     }
+
+
+
 }

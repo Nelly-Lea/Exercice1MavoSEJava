@@ -5,6 +5,7 @@ import java.util.List;
 import static geometries.Intersectable.GeoPoint;
 
 public class Ray {
+    public static final double  DELTA=0.1;
     final Point3D _p0;
     final Vector _dir;
 
@@ -16,21 +17,44 @@ public class Ray {
         _p0 = p0;
         _dir = dir.normalized();
     }
-
+public Ray (Point3D point, Vector n, Vector direction)
+{
+    Vector delta=n.scale(n.dotProduct(direction)>0? DELTA: -DELTA);
+    _p0=point.add(delta);
+    _dir=direction;
+}
     /**
      * find the closest point to ray origin
      * @param pointsList intersections point List
      * @return closest point
      */
 
-    public Point3D findClosestPoint(List<Point3D> pointsList){
+//    public Point3D findClosestPoint(List<Point3D> pointsList){
+//        Point3D result=null;
+//        double closestDistance=Double.MAX_VALUE;
+//
+//        if(pointsList==null){
+//            return null;
+//        }
+//        for(Point3D p:pointsList){
+//            double temp=p.distance(_p0);// temp is the distance between a point in the list and the _p0 of the ray
+//            if(temp<closestDistance){
+//                closestDistance=temp;// closestDistance is the minimum temp
+//                result=p;
+//            }
+//        }
+//        return result; //result is the closest point to the ray
+//
+//    }
+    public /*GeoPoint*/ Point3D findClosestPoint(List<Point3D> pointsList){
+        //GeoPoint result=null;
         Point3D result=null;
         double closestDistance=Double.MAX_VALUE;
 
         if(pointsList==null){
             return null;
         }
-        for(Point3D p:pointsList){
+        for(/*GeoPoint*/ Point3D p:pointsList){
             double temp=p.distance(_p0);// temp is the distance between a point in the list and the _p0 of the ray
             if(temp<closestDistance){
                 closestDistance=temp;// closestDistance is the minimum temp
@@ -41,6 +65,25 @@ public class Ray {
 
     }
 
+//
+//    public Point3D findClosestPoint(Ray ray){
+//        List<GeoPoint>intersections= find
+//        Point3D result=null;
+//        double closestDistance=Double.MAX_VALUE;
+//
+//        if(pointsList==null){
+//            return null;
+//        }
+//        for(Point3D p:pointsList){
+//            double temp=p.distance(_p0);// temp is the distance between a point in the list and the _p0 of the ray
+//            if(temp<closestDistance){
+//                closestDistance=temp;// closestDistance is the minimum temp
+//                result=p;
+//            }
+//        }
+//        return result; //result is the closest point to the ray
+//
+//    }
     /**
      * @param o
      * @return true if the Ray received and the Ray on which the operation is performed are equal

@@ -12,7 +12,7 @@ class CylinderTest {
 
     @Test
     void constructor()
-   {
+    {
         try {
             Ray ray=new Ray(new Point3D(0,0,0),new Vector(0,1,0));
             new Cylinder(4,ray,3);
@@ -20,22 +20,22 @@ class CylinderTest {
             fail("Failed constructing a correct cylinder");
         }
 
-       // =============== Boundary Values Tests ==================
-       // test radius ZERO
-           try {
+        // =============== Boundary Values Tests ==================
+        // test radius ZERO
+        try {
             Ray ray=new Ray(new Point3D(0,0,0),new Vector(0,1,0));
             new Cylinder(0,ray,3);
         } catch (IllegalArgumentException e) {
             fail("Failed constructing a correct cylinder");
         }
 
-       // test Vector ZERO
-       try {
-           Ray ray=new Ray(new Point3D(0,0,0),new Vector(0,0,0));
-           new Cylinder(3,ray,2);
-       } catch (IllegalArgumentException e) {
-           fail("Failed constructing a correct cylinder");
-       }
+        // test Vector ZERO
+        try {
+            Ray ray=new Ray(new Point3D(0,0,0),new Vector(0,0,0));
+            new Cylinder(3,ray,2);
+        } catch (IllegalArgumentException e) {
+            fail("Failed constructing a correct cylinder");
+        }
 
     }
 

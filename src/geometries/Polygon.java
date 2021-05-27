@@ -94,8 +94,10 @@ public class Polygon extends Geometry {
     }
 
     @Override
-    public List<GeoPoint> findGeoIntersections(Ray ray) {
-        List<GeoPoint> result = plane.findGeoIntersections(ray);
+    public List<GeoPoint> findGeoIntersections(Ray ray , double maxDistance) {///
+// //       List<GeoPoint> result = plane.findGeoIntersections(ray , maxDistance);
+        List<GeoPoint> result = plane.findGeoIntersections(ray , maxDistance);
+
         if (result == null) {
             return result;
         }
@@ -131,7 +133,7 @@ public class Polygon extends Geometry {
                 return null;
             }
         }
-        Point3D planeGo=plane.findGeoIntersections(ray).get(0).point;
+        Point3D planeGo=plane.findGeoIntersections(ray,maxDistance).get(0).point;
         return List.of(new GeoPoint(this,planeGo));
         //return result;
     }

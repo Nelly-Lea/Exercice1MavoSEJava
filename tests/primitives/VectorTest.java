@@ -8,69 +8,69 @@ import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.*;
 
 
- /**
-  * Unit tests for primitives.Vector class
-  * @author Dan
-  */
+/**
+ * Unit tests for primitives.Vector class
+ * @author Dan
+ */
 
 class VectorTest {
 
-     Vector v1 = new Vector(1, 2, 3);
-     Vector v2 = new Vector(-2, -4, -6);
+    Vector v1 = new Vector(1, 2, 3);
+    Vector v2 = new Vector(-2, -4, -6);
 
-     @Test
-     void testZeroPoint(){
-         try {//test zero vector
-             new Vector(0, 0, 0);
-             fail("ERROR: zero vector does not throw an exception");
-         }catch (IllegalArgumentException e){
-             out.println("good:zero vector cannot exist");
-         }
-     }
-
-     @Test
-    void dotProduct() {
-         double dot=v1.dotProduct(v2);
-         assertEquals(dot,-28,"ERROR");
+    @Test
+    void testZeroPoint(){
+        try {//test zero vector
+            new Vector(0, 0, 0);
+            fail("ERROR: zero vector does not throw an exception");
+        }catch (IllegalArgumentException e){
+            out.println("good:zero vector cannot exist");
+        }
     }
 
-     /**
-      * Test method for {@link primitives.Vector#crossProduct(primitives.Vector)}.
-      */
+    @Test
+    void dotProduct() {
+        double dot=v1.dotProduct(v2);
+        assertEquals(dot,-28,"ERROR");
+    }
+
+    /**
+     * Test method for {@link primitives.Vector#crossProduct(primitives.Vector)}.
+     */
 
 
-     @Test
+    @Test
     void crossProduct() {
 
-         // ============ Equivalence Partitions Tests ==============
-         Vector v3 = new Vector(0, 3, -2);
-         Vector vr = v1.crossProduct(v3);
+        // ============ Equivalence Partitions Tests ==============
+        Vector v3 = new Vector(0, 3, -2);
+        Vector vr = v1.crossProduct(v3);
 
-         // Test that length of cross-product is proper (orthogonal vectors taken for simplicity)
-         assertEquals( v1.length() * v3.length(), vr.length(), 0.00001,"crossProduct() wrong result length");
+        // Test that length of cross-product is proper (orthogonal vectors taken for simplicity)
+        assertEquals( v1.length() * v3.length(), vr.length(), 0.00001,"crossProduct() wrong result length");
 
-         // Test cross-product result orthogonality to its operands
-         assertTrue(isZero(vr.dotProduct(v1)),"crossProduct() result is not orthogonal to 1st operand");
-         assertTrue(isZero(vr.dotProduct(v3)),"crossProduct() result is not orthogonal to 2nd operand");
+        // Test cross-product result orthogonality to its operands
+        assertTrue(isZero(vr.dotProduct(v1)),"crossProduct() result is not orthogonal to 1st operand");
+        assertTrue(isZero(vr.dotProduct(v3)),"crossProduct() result is not orthogonal to 2nd operand");
 
-         // =============== Boundary Values Tests ==================
-         // test zero vector from cross-productof co-lined vectors
-         try {
-             v1.crossProduct(v2);
-             fail("crossProduct() for parallel vectors does not throw an exception");
-         } catch (Exception e) {}
+        // =============== Boundary Values Tests ==================
+        // test zero vector from cross-productof co-lined vectors
+        try {
+            v1.crossProduct(v2);
+            fail("crossProduct() for parallel vectors does not throw an exception");
+        } catch (Exception e) {}
 
-     }
+    }
 
-     @Test
+    @Test
     void add() {
-         Vector v=v1.scale(-1);
-         if(v2.equals(v))
-             assertEquals(v2,v,"ERROR result is the vector 0");
+        Vector v=v1.scale(-1);
+        if(v2.equals(v))
+            assertEquals(v2,v,"ERROR result is the vector 0");
 
 
 
-     }
+    }
     @Test
     void subtract() {
         if(v2.equals(v1))
@@ -93,8 +93,8 @@ class VectorTest {
 
     @Test
     void length() {
-         double result =new Vector(0, 3, 4).length();
-         assertTrue(isZero(result -5),"ERROR: length() wrong value");
+        double result =new Vector(0, 3, 4).length();
+        assertTrue(isZero(result -5),"ERROR: length() wrong value");
 
     }
 

@@ -1,5 +1,7 @@
 package geometries;
 
+
+
 import primitives.Point3D;
 import primitives.Ray;
 import primitives.Vector;
@@ -9,11 +11,11 @@ import java.util.List;
 import static primitives.Util.*;
 
 /*
-* The class is based on Point3D,Ray and Vector and an extends of Tube
+ * The class is based on Point3D,Ray and Vector and an extends of Tube
  */
 public class Cylinder extends Tube {
     final double _height;
-// constructor
+    // constructor
     public Cylinder(double radius, Ray axisRay,double height) {
         super(radius,axisRay);
         _height = height;
@@ -21,10 +23,10 @@ public class Cylinder extends Tube {
     //return the normal of the cylinder at point p0
     public Vector getNormal(Point3D p0)
     {
-       Point3D o=_axisRay.get_p0();
-       Vector v=_axisRay.get_dir();
+        Point3D o=_axisRay.get_p0();
+        Vector v=_axisRay.get_dir();
 
-       //projection of P-o on the ray:
+        //projection of P-o on the ray:
         double t;
         try{
             t=alignZero(p0.subtract(o).dotProduct(v));
@@ -33,7 +35,7 @@ public class Cylinder extends Tube {
         }
         //if the point is a base
         if(t==0||isZero(_height-t))//if it's close to 0,we'll get ZERO vector exception
-           return v;
+            return v;
         o=o.add(v.scale(t));
         return p0.subtract(o).normalize();
     }

@@ -76,16 +76,16 @@ public class Vector {
         double v2 = v._head._y._coord;
         double v3 = v._head._z._coord;
 
-       Point3D newhead=new Point3D(
+        Point3D newhead=new Point3D(
                 u2*v3-u3*v2,
                 u3*v1-u1*v3,
                 u1*v2-u2*v1
 
         );
-       if(newhead.equals(ZERO)){
-           throw new IllegalArgumentException("cross product resulting zero point head");
-       }
-       return new Vector(newhead);
+        if(newhead.equals(ZERO)){
+            throw new IllegalArgumentException("cross product resulting zero point head");
+        }
+        return new Vector(newhead);
     }
 
     /**
@@ -94,9 +94,9 @@ public class Vector {
      */
     public Vector add(Vector v){
         return new Vector(new Point3D(
-               _head._x._coord +v._head._x._coord,
-               _head._y._coord +v._head._y._coord,
-               _head._z._coord +v._head._z._coord
+                _head._x._coord +v._head._x._coord,
+                _head._y._coord +v._head._y._coord,
+                _head._z._coord +v._head._z._coord
 
         ));
     }

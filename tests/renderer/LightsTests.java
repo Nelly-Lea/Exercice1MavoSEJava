@@ -55,6 +55,20 @@ public class LightsTests {
     /**
      * Produce a picture of a sphere lighted by a point light
      */
+//    @Test
+//    public void spherePoint() {
+//        scene1.geometries.add(sphere);
+//        scene1.lights.add(new PointLight(new Color(500, 300, 0), new Point3D(-50, -50, 50))//
+//                .setKl(0.00001).setKq(0.000001));
+//
+//        ImageWriter imageWriter = new ImageWriter("lightSpherePoint", 500, 500);
+//        Render render = new Render()//
+//                .setImageWriter(imageWriter) //
+//                .setCamera(camera1) //
+//                .setRayTracer(new BasicRayTracer(scene1));
+//        render.renderImage();
+//        render.writeToImage();
+//    }
     @Test
     public void spherePoint() {
         scene1.geometries.add(sphere);
@@ -69,7 +83,6 @@ public class LightsTests {
         render.renderImage();
         render.writeToImage();
     }
-
     /**
      * Produce a picture of a sphere lighted by a spot light
      */
@@ -167,11 +180,25 @@ public class LightsTests {
     /**
      * Produce a picture of a sphere lighted by a pink spot light
      */
+//    @Test
+//    public void sphereSpot2() {
+//        scene1.geometries.add(sphere);
+//        scene1.lights.add(new SpotLight(new Color(413, 20, 427), new Point3D(-60, -60, 60), new Vector(2, 2, 2)) //
+//                .setKl(0.0000075).setKq(0.0000000075));
+//
+//        ImageWriter imageWriter = new ImageWriter("lightSphereSpot2", 500, 500);
+//        Render render = new Render()//
+//                .setImageWriter(imageWriter) //
+//                .setCamera(camera1) //
+//                .setRayTracer(new BasicRayTracer(scene1));
+//        render.renderImage();
+//        render.writeToImage();
+//    }
     @Test
     public void sphereSpot2() {
         scene1.geometries.add(sphere);
-        scene1.lights.add(new SpotLight(new Color(413, 20, 427), new Point3D(-60, -60, 60), new Vector(2, 2, 2)) //
-                .setKl(0.0000075).setKq(0.0000000075));
+        scene1.lights.add(new SpotLight(new Color(500, 300, 0), new Point3D(-70, -70, 25), new Vector(1, 1, -2)) //
+                .setKl(0.00001).setKq(0.00000001));
 
         ImageWriter imageWriter = new ImageWriter("lightSphereSpot2", 500, 500);
         Render render = new Render()//

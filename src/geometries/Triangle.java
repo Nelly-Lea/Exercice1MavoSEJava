@@ -9,11 +9,11 @@ import java.util.List;
  * The class is based on Point3D and an extends of Polygon
  */
 
-public class Triangle extends Polygon{
+public class Triangle extends Polygon {
     //constructor that receives 3 points
-    public Triangle(Point3D p0,Point3D p1,Point3D p2) {
+    public Triangle(Point3D p0, Point3D p1, Point3D p2) {
 
-        super(p0,p1,p2);
+        super(p0, p1, p2);
     }
 
 
@@ -24,7 +24,7 @@ public class Triangle extends Polygon{
                 ", plane=" + plane +
                 '}';
     }
-//
+
 //    @Override
 //    public List<Point3D> findIntersections(Ray ray) {
 ////        Point3D p0=ray.get_p0();
@@ -68,14 +68,14 @@ public class Triangle extends Polygon{
 ////
 ////        return null;
 //        return super.findIntersections(ray);
-
-    //}
-    public List<GeoPoint> findGeoIntersections(Ray ray) {
-        return super.findGeoIntersections(ray);
+//
+//    }
+    public List<GeoPoint> findGeoIntersections(Ray ray,double maxDistance) {
+        return super.findGeoIntersections(ray,maxDistance);
 
     }
+}
 //    public List<Point3D> findIntersections(Ray ray) {
 //        return super.findIntersections(ray);
 //
-//    }
-}
+//

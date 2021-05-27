@@ -14,17 +14,22 @@ public class PointLight extends Light implements LightSource{
     private double _Kl=0d;
     private double _Kq=0d;
 
-    public double getKc() {
-        return _Kc;
-    }
+////    public double getKc() {
+//        return _Kc;
+//    }
+//
+//    public PointLight setKc(double kc) {
+//        _Kc = kc;
+//        return this;
+//    }
+//
+//    public double getKl() {
+//        return _Kl;
+//    }
 
-    public PointLight setKc(double kc) {
-        _Kc = kc;
+    public PointLight set_Kc(double Kc) {
+        _Kc = _Kc;
         return this;
-    }
-
-    public double getKl() {
-        return _Kl;
     }
 
     public PointLight setKl(double kl) {
@@ -61,6 +66,7 @@ public class PointLight extends Light implements LightSource{
         double d=p.distance(_position);
         double attenuation=1d/(_Kc+_Kl*d+_Kq*d*d);// this is the denominator
         return _intensity.scale(attenuation);// I0*(1/kc+k*d+kq*d^2)
+
     }
 
     /**
@@ -71,5 +77,10 @@ public class PointLight extends Light implements LightSource{
     @Override
     public Vector getL(Point3D p) {
         return p.subtract(_position).normalized();
+    }
+    @Override
+    public double getDistance(Point3D point)
+    {
+        return point.distance(_position);
     }
 }

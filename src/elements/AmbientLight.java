@@ -4,10 +4,10 @@ import primitives.Color;
 
 public class AmbientLight extends Light{
 
-   // final private Color _intensity;
+    // final private Color _intensity;
 
     public AmbientLight() {
-       // _intensity=Color.BLACK;
+        // _intensity=Color.BLACK;
         super(Color.BLACK);
     }
 
@@ -28,7 +28,7 @@ public class AmbientLight extends Light{
      * get intensity color
      * @return intensity
      */
-   // public Color getIntensity() {
+    // public Color getIntensity() {
 //        return _intensity;
 //    }
 

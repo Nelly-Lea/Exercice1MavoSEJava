@@ -8,7 +8,25 @@ public class Material {
     public double Kd=0;
     public double Ks=0;
     public int nShininess=0;
+    public double Kt=0.0;
+    public double Kr=0.0;
 
+////    public void setKt(double kt) {
+//        Kt = kt;
+//    }
+//
+//    public void setKr(double kr) {
+//        Kr = kr;
+//    }
+public Material setKt(double kt) {
+    Kt = kt;
+    return this;
+}
+
+        public Material setKr(double kr) {
+        Kr = kr;
+        return this;
+    }
 
     /**
      * setter

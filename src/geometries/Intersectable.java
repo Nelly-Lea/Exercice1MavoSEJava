@@ -12,7 +12,14 @@ import java.util.stream.Collectors;
 
 public interface Intersectable {
     //List<Point3D> findIntersections(Ray ray);
-    public List<GeoPoint> findGeoIntersections(Ray ray);
+
+    //default List<GeoPoint>
+
+    public List<GeoPoint> findGeoIntersections(Ray ray ,double maxdistance);
+    default List<GeoPoint> findGeoIntersections(Ray ray)
+    {
+        return findGeoIntersections(ray, Double.POSITIVE_INFINITY);
+    }
     /**
      * this class contains a geometry and point on this geometry
      */
@@ -33,7 +40,8 @@ public interface Intersectable {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             GeoPoint geoPoint = (GeoPoint) o;
-            return geometry.equals(geoPoint.geometry) && point.equals(geoPoint.point);
+          return(point.equals(geoPoint.point))&&(geometry.getClass().equals(geoPoint.geometry.getClass()));
+           //// return geometry.equals(geoPoint.geometry) && point.equals(geoPoint.point);
         }
 
     }
@@ -45,12 +53,5 @@ public interface Intersectable {
                 .map(gp -> gp.point)
                 .collect(Collectors.toList());
     }
-//    default List<Point3D> findIGeontersections(Ray ray) {
-//        var geoList = findGeoIntersections(ray);
-//        return geoList == null ? null
-//                : geoList.stream()
-//                .map(gp -> gp.point)
-//                .collect(Collectors.toList());
-//    }
 
 }
