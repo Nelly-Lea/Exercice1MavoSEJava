@@ -29,32 +29,15 @@ public Ray (Point3D point, Vector n, Vector direction)
      * @return closest point
      */
 
-//    public Point3D findClosestPoint(List<Point3D> pointsList){
-//        Point3D result=null;
-//        double closestDistance=Double.MAX_VALUE;
-//
-//        if(pointsList==null){
-//            return null;
-//        }
-//        for(Point3D p:pointsList){
-//            double temp=p.distance(_p0);// temp is the distance between a point in the list and the _p0 of the ray
-//            if(temp<closestDistance){
-//                closestDistance=temp;// closestDistance is the minimum temp
-//                result=p;
-//            }
-//        }
-//        return result; //result is the closest point to the ray
-//
-//    }
-    public /*GeoPoint*/ Point3D findClosestPoint(List<Point3D> pointsList){
-        //GeoPoint result=null;
-        Point3D result=null;
+    public Point3D findClosestPoint(List<Point3D> pointsList){
+
+       Point3D result=null;
         double closestDistance=Double.MAX_VALUE;
 
         if(pointsList==null){
             return null;
         }
-        for(/*GeoPoint*/ Point3D p:pointsList){
+        for(Point3D p:pointsList){
             double temp=p.distance(_p0);// temp is the distance between a point in the list and the _p0 of the ray
             if(temp<closestDistance){
                 closestDistance=temp;// closestDistance is the minimum temp
@@ -65,7 +48,7 @@ public Ray (Point3D point, Vector n, Vector direction)
 
     }
 
-//
+
 //    public Point3D findClosestPoint(Ray ray){
 //        List<GeoPoint>intersections= find
 //        Point3D result=null;
