@@ -2,6 +2,8 @@ package primitives;
 
 /**
  * this class contains coefficients kd, ks and nShininess
+ * kt is transparency coefficent
+ * kr is a coefficient to evaluate radiance
  */
 
 public class Material {
@@ -11,18 +13,21 @@ public class Material {
     public double Kt=0.0;
     public double Kr=0.0;
 
-////    public void setKt(double kt) {
-//        Kt = kt;
-//    }
-//
-//    public void setKr(double kr) {
-//        Kr = kr;
-//    }
-public Material setKt(double kt) {
+    /**
+     * we set the kt coefficient and return the object material
+     * @param kt
+     * @return Material that we are working on
+     */
+    public Material setKt(double kt) {
     Kt = kt;
     return this;
 }
 
+    /**
+     * we set the kr coefficient and return the object material
+     * @param kr
+     * @return Material that we are working on
+     */
         public Material setKr(double kr) {
         Kr = kr;
         return this;

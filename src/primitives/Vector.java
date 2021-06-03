@@ -12,7 +12,7 @@ public class Vector {
 
     public Vector(Point3D head) {
         if (head.equals(ZERO)) {
-            throw new IllegalArgumentException("Vector head cannot be Point(0,0,0");
+            throw new IllegalArgumentException("Vector head cannot be Point(0,0,0)");
         }
         _head = head;
     }
