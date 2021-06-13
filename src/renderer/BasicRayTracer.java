@@ -4,10 +4,13 @@ import elements.LightSource;
 import primitives.*;
 import scene.Scene;
 import geometries.Intersectable;
+
+import java.util.LinkedList;
 import java.util.List;
 
 import static geometries.Intersectable.GeoPoint;
 import static primitives.Util.alignZero;
+import static primitives.Util.random;
 
 public class BasicRayTracer extends RayTracerBase {
     private static final double DELTA = 0.1;
@@ -273,5 +276,31 @@ public class BasicRayTracer extends RayTracerBase {
         return ktr;
 
 
+    }
+
+    private List<Ray> constructReflectedRay2(Point3D point, Vector v, Vector n) {
+        List<Ray> ListRay=new LinkedList<Ray>();
+        double vn = v.dotProduct(n);
+        Vector vnn = n.scale(vn);
+        if(alignZero(v.dotProduct(n))==0) {
+            ListRay.add(new Ray(point, v));
+            return ListRay;
+        }
+        Ray r=new Ray(point,n, v.subtract(vnn.scale(2)));
+        Vector u=new Vector(-r.get_dir().getHead().getY(),r.get_dir().getHead().getX(),0);
+        Vector w=new Vector(0,-r.get_dir().getHead().getZ(),r.get_dir().getHead().getY());
+        //u = -a/2 + ε a
+        for (int i=0;i<4;i++) {
+            double eps = random(-1, 1);
+            double eps1 = random(-1, 1);
+            double u1 = -1 / 2 + eps * 1;
+            double u2 = -1 / 2 + eps1 * 1;
+            Vector v2=r.get_dir().add(u.scale(u1)).add(w.scale(u2));
+
+            Ray r2=new Ray(point,v2);
+            ListRay.add(r2);
+            v2=null;
+        }
+        return ListRay ;// return r=2-(v.n).n
     }
 }
