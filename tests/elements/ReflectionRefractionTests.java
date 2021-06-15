@@ -293,7 +293,7 @@ public class ReflectionRefractionTests {
 //        Camera camera = new Camera(new Point3D(-8, -8, 100), new Vector(0, 0, -10), new Vector(0, 1, 0)) //
 //                .setViewPlaneSize(200, 200).setDistance(1000);
         Camera camera = new Camera(new Point3D(-7.68, -1.97, 0), new Vector(1.1, 0.2, 0), new Vector(0, 0, 1)) //
-                .setViewPlaneSize(200, 200).setDistance(350);
+                .setViewPlaneSize(50, 50).setDistance(350);
         scene.setAmbientLight(new AmbientLight(new Color(java.awt.Color.black), 0.15));
         /*1*/
         scene.geometries.add(

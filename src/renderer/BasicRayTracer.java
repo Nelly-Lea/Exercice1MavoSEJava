@@ -9,10 +9,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static geometries.Intersectable.GeoPoint;
-import static primitives.Util.alignZero;
-import static primitives.Util.random;
 
 import static primitives.Point3D.ZERO;
+import static primitives.Util.*;
+
 public class BasicRayTracer extends RayTracerBase {
     private static final double DELTA = 0.1;
 
@@ -291,33 +291,51 @@ public class BasicRayTracer extends RayTracerBase {
         ListRay.add(r);
 
 
-        Vector u=new Vector(-r.get_dir().getHead().getY(),r.get_dir().getHead().getX(),0);
+        Vector u=new Vector(-r.get_dir().getHead().getY(),r.get_dir().getHead().getX(),0).normalized();
+//        Vector u=n;
+//        Vector w=n.crossProduct(v);
 
-
-        Vector w=new Vector(0,-r.get_dir().getHead().getZ(),r.get_dir().getHead().getY());
+        Vector w=new Vector(0,-r.get_dir().getHead().getZ(),r.get_dir().getHead().getY()).normalized();
 
         //u = -a/2 + ε a
-        for (int i=0;i<4;i++) {
-            double eps = random(-1, 1);
-            double eps1 = random(-1, 1);
-            double u1 = -1 / 2 + eps * 1;
-            double u2 = -1 / 2 + eps1 * 1;
+        for (int i=0;i<1;i++) {
+//            double eps = random(-1, 1);
+//            double eps1 = random(-1, 1);
+//            double u1 = -1 / 2 + eps * 1;
+//            double u2 = -1 / 2 + eps1 * 1;
+          double cosTeta=random(-1,1);
+          double sinTeta=Math.sqrt(1-cosTeta*cosTeta);
+          double d=random(-2,2);
+          double x=d*cosTeta;
+          double y=d*sinTeta;
+
+            Point3D p0=r.get_p0();
+            double distance=r.get_dir().length();
+            Point3D pc=p0.add(r.get_dir().scale(distance));
+            Point3D pt=pc;
+            if(!isZero(x))
+                pt=pt.add(u.scale(x));
+            if(!isZero(y))
+                pt=pt.add(w.scale(y));
+            ListRay.add(new Ray(p0,pt.subtract(p0)));
+
+
            // Vector v2=
-            Vector v2=r.get_dir().add(u.scale(u1)).add(w.scale(u2));
+          //  Vector v2=r.get_dir().add(u.scale(u1)).add(w.scale(u2));
 
-            if(v2.getHead().equals(ZERO))
-            {
-                eps = random(-1, 1);
-                eps1 = random(-1, 1);
-                u1 = -1 / 2 + eps * 1;
-                 u2 = -1 / 2 + eps1 * 1;
-                 v2=r.get_dir().add(u.scale(u1)).add(w.scale(u2));
+//            if(v2.getHead().equals(ZERO))
+//            {
+//                eps = random(-1, 1);
+//                eps1 = random(-1, 1);
+//                u1 = -1 / 2 + eps * 1;
+//                 u2 = -1 / 2 + eps1 * 1;
+//                 v2=r.get_dir().add(u.scale(u1)).add(w.scale(u2));
+//
+//            }
 
-            }
-
-            Ray r2=new Ray(point,v2);
-            ListRay.add(r2);
-            v2=null;
+//            Ray r2=new Ray(point,v2);
+//            ListRay.add(r2);
+//            v2=null;
         }
         return ListRay ;// return r=2-(v.n).n
     }
@@ -353,33 +371,43 @@ public class BasicRayTracer extends RayTracerBase {
         Ray r= new Ray(point,n, v);
 
         ListRay.add(r);
-        if((-r.get_dir().getHead().getY()==0)&&(r.get_dir().getHead().getX()==0)) {
-            Color esai=Color.BLACK;
-        }
-
+//        if((-r.get_dir().getHead().getY()==0)&&(r.get_dir().getHead().getX()==0)) {
+//            Color esai=Color.BLACK;
+//        }
+//
         Vector u=new Vector(-r.get_dir().getHead().getY(),r.get_dir().getHead().getX(),0);
-
-        if((-r.get_dir().getHead().getZ()==0)&&(r.get_dir().getHead().getY()==0)) {
-            Color esai=Color.BLACK;
-        }
-
-        Vector w=new Vector(0,-r.get_dir().getHead().getZ(),r.get_dir().getHead().getY());
-
+//
+//        if((-r.get_dir().getHead().getZ()==0)&&(r.get_dir().getHead().getY()==0)) {
+//            Color esai=Color.BLACK;
+//        }
+//
+       Vector w=new Vector(0,-r.get_dir().getHead().getZ(),r.get_dir().getHead().getY());
+//        Vector u=n;
+//        Vector w=n.crossProduct(v);
         //u = -a/2 + ε a
-        for (int i=0;i<4;i++) {
-            double eps = random(-1, 1);
-            double eps1 = random(-1, 1);
-            double u1 = -1 / 2 + eps * 1;
-            double u2 = -1 / 2 + eps1 * 1;
-            Vector v2=r.get_dir().add(u.scale(u1)).add(w.scale(u2));
-            if(v2.getHead().equals(ZERO))
-            {
-                eps = random(-1, 1);
-                 eps1 = random(-1, 1);
-                 u1 = -1 / 2 + eps * 1;
-                 u2 = -1 / 2 + eps1 * 1;
-                 v2=r.get_dir().add(u.scale(u1)).add(w.scale(u2));
-            }
+        for (int i=0;i<1;i++) {
+//            double eps = random(-1, 1);
+//            double eps1 = random(-1, 1);
+//            double u1 = -1 / 2 + eps * 1;
+//            double u2 = -1 / 2 + eps1 * 1;
+//            Vector v2=r.get_dir().add(u.scale(u1)).add(w.scale(u2));
+            double a =random(-1,1);
+            double u1=Math.tan(a);
+            Vector x=u.scale(u1);
+            double b =random(-1,1);
+            double u2=Math.tan(b);
+            Vector y=w.scale(u2);
+            Point3D p=r.get_dir().getHead().add(x);
+            p.add(y) ;
+            Vector v2=p.subtract(r.get_p0()).normalized();
+//            if(v2.getHead().equals(ZERO))
+//            {
+//                eps = random(-1, 1);
+//                 eps1 = random(-1, 1);
+//                 u1 = -1 / 2 + eps * 1;
+//                 u2 = -1 / 2 + eps1 * 1;
+//                 v2=r.get_dir().add(u.scale(u1)).add(w.scale(u2));
+//            }
 
             Ray r2=new Ray(point,v2);
             ListRay.add(r2);
@@ -400,7 +428,7 @@ public class BasicRayTracer extends RayTracerBase {
         double kkt = k * material.Kt;
         if (kkt > MIN_CALC_COLOR_K)
             color = color.add(
-                    calcGlobalEffect2(constructRefractedRay2(gp.point, v, n), level, material.Kt, kkt));
+                    calcGlobalEffect(constructRefractedRay(gp.point, v, n), level, material.Kt, kkt));
         return color;
     }
 }
