@@ -194,7 +194,7 @@ public class ReflectionRefractionTests {
 //           new Sphere(0.3, new Point3D(-4.01,-1.67,0)).setEmmission(new Color(java.awt.Color.pink)), // kt transparent =1 kr=1 mirroir
 //                new Sphere(0.8, new Point3D(-4.01,-1.67,0)).setEmmission(new Color(java.awt.Color.blue)) .setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(100).setKt(1).setKr(0.95)),
           /*1*/  scene.geometries.add( new Sphere(0.2, new Point3D(1.73,-1.86,0.28)).setEmmission(new Color(java.awt.Color.black)) .setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(30).setKt(0).setKr(0)),
-                /*2*/new Sphere(0.25, new Point3D(-0.75,-1.78,-0.5)).setEmmission(new Color(204,85,0)) .setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(100).setKt(0.5).setKr(0.3)),// mirroir qui donne rose
+                /*2*/new Sphere(0.25, new Point3D(-0.75,-1.78,-0.5)).setEmmission(new Color(204,85,0)) .setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(100).setKt(0.5).setKr(0.3)),// mirroir qui donne orange
                 /*14*/new Sphere(0.3, new Point3D(-1.29,0.8,0.23)).setEmmission(new Color(217,1,21)).setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(100).setKt(0.5).setKr(0.3)),// rouge sur le cote gauche
                 /*3*/new Sphere(0.03, new Point3D(-0.49,-0.26,0.5)).setEmmission(new Color(java.awt.Color.red)) .setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(100).setKt(1).setKr(0.95)),
                 /*4*/new Sphere(0.05, new Point3D(0.16,0.48,0)).setEmmission(new Color(java.awt.Color.cyan)) .setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(100).setKt(1).setKr(0.95)),
@@ -287,4 +287,36 @@ public class ReflectionRefractionTests {
         render.renderImage();
         render.writeToImage();
     }
+
+    @Test
+    public void ImageTest() {
+//        Camera camera = new Camera(new Point3D(-8, -8, 100), new Vector(0, 0, -10), new Vector(0, 1, 0)) //
+//                .setViewPlaneSize(200, 200).setDistance(1000);
+        Camera camera = new Camera(new Point3D(-7.68, -1.97, 0), new Vector(1.1, 0.2, 0), new Vector(0, 0, 1)) //
+                .setViewPlaneSize(200, 200).setDistance(350);
+        scene.setAmbientLight(new AmbientLight(new Color(java.awt.Color.black), 0.15));
+        /*1*/
+        scene.geometries.add(
+                /*2*/new Sphere(0.25, new Point3D(-0.75,-1.78,-0.5)).setEmmission(new Color(204,85,0)) .setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(100).setKt(0.5).setKr(0.3)),
+                /*34*/ new Plane(new Point3D(-2, -2, -0.82), new Point3D(1, -2, -0.82), new Point3D(1, 0.5, -0.82))
+                        .setEmmission(new Color(java.awt.Color.black)).setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(30).setKt(0).setKr(1)));
+        scene.lights.add(new SpotLight(new Color(219, 0, 115), new Point3D(-1.38, 0.71, 1.34), new Vector(0.46, -0.46, -0.62)) //
+                .setKl(4E-5).setKq(2E-7));
+        scene.lights.add(new PointLight(new Color(96, 80, 220), new Point3D(0.11, -1.32, 0.56))//lumiere au fond plane blanche
+                .setKl(0.00001).setKq(0.000001));
+        scene.lights.add(new DirectionalLight(new Color(75, 0, 130), new Vector(0, 0, -1)));
+        scene.lights.add(new SpotLight(new Color(0, 0, 400), new Point3D(1.77, -1.44, 1.77), new Vector(-0.18, 0.17, -0.33)) //
+                .setKl(4E-5).setKq(2E-7));
+        scene.lights.add(new SpotLight(new Color(219,0,115), new Point3D(-1.38, 0.71, 1.34), new Vector(0.46, -0.46, -0.62)) //
+                .setKl(4E-5).setKq(2E-7));
+        ImageWriter imageWriter = new ImageWriter("ImageTest", 600, 600);
+        Render render = new Render() //
+                .setImageWriter(imageWriter) //
+                .setCamera(camera) //
+                .setRayTracer(new BasicRayTracer(scene));
+
+        render.renderImage();
+        render.writeToImage();
+    }
+
 }

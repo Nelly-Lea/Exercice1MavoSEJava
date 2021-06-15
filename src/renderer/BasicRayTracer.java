@@ -12,6 +12,7 @@ import static geometries.Intersectable.GeoPoint;
 import static primitives.Util.alignZero;
 import static primitives.Util.random;
 
+import static primitives.Point3D.ZERO;
 public class BasicRayTracer extends RayTracerBase {
     private static final double DELTA = 0.1;
 
@@ -71,7 +72,7 @@ public class BasicRayTracer extends RayTracerBase {
         Color color = intersection.geometry.getEmmission();
 
         color = color.add(calcLocalEffects(intersection, ray,k));
-        return 1 == level ? color : color.add(calcGlobalEffects(intersection, ray.get_dir(), level, k));
+        return 1 == level ? color : color.add(calcGlobalEffects2(intersection, ray.get_dir(), level, k));
     }
 
     /**
@@ -287,8 +288,83 @@ public class BasicRayTracer extends RayTracerBase {
             return ListRay;
         }
         Ray r=new Ray(point,n, v.subtract(vnn.scale(2)));
+        ListRay.add(r);
+
+
         Vector u=new Vector(-r.get_dir().getHead().getY(),r.get_dir().getHead().getX(),0);
+
+
         Vector w=new Vector(0,-r.get_dir().getHead().getZ(),r.get_dir().getHead().getY());
+
+        //u = -a/2 + ε a
+        for (int i=0;i<4;i++) {
+            double eps = random(-1, 1);
+            double eps1 = random(-1, 1);
+            double u1 = -1 / 2 + eps * 1;
+            double u2 = -1 / 2 + eps1 * 1;
+           // Vector v2=
+            Vector v2=r.get_dir().add(u.scale(u1)).add(w.scale(u2));
+
+            if(v2.getHead().equals(ZERO))
+            {
+                eps = random(-1, 1);
+                eps1 = random(-1, 1);
+                u1 = -1 / 2 + eps * 1;
+                 u2 = -1 / 2 + eps1 * 1;
+                 v2=r.get_dir().add(u.scale(u1)).add(w.scale(u2));
+
+            }
+
+            Ray r2=new Ray(point,v2);
+            ListRay.add(r2);
+            v2=null;
+        }
+        return ListRay ;// return r=2-(v.n).n
+    }
+
+    private Color calcGlobalEffect2(List<Ray>  ListRays, int level, double kx, double kkx) {
+        Color color=new Color(0,0,0);
+        for (Ray ray :ListRays)
+        {
+            if(ray==ListRays.get(0)) {
+                for (int i = 0; i < 3; i++) {
+                    List<GeoPoint> listgp = _scene.geometries.findGeoIntersections(ray);
+                    GeoPoint gp = ray.findClosestGeoPoint(listgp);
+                    color.add(gp == null ? _scene.background : calcColor(gp, ray, level - 1, kkx)).scale(kx);
+                }
+            }
+            else {
+                List<GeoPoint> listgp = _scene.geometries.findGeoIntersections(ray);
+                GeoPoint gp = ray.findClosestGeoPoint(listgp);
+                color.add(gp == null ? _scene.background : calcColor(gp, ray, level - 1, kkx)).scale(kx);
+            }
+        }
+
+        return color.reduce(ListRays.size());
+    }
+
+    private List<Ray> constructRefractedRay2(Point3D point, Vector v, Vector n) {
+        List<Ray> ListRay=new LinkedList<Ray>();
+        if(alignZero(v.dotProduct(n))==0) {
+            Ray r= new Ray(point, v);
+            ListRay.add(r);
+            return ListRay;
+        }
+        Ray r= new Ray(point,n, v);
+
+        ListRay.add(r);
+        if((-r.get_dir().getHead().getY()==0)&&(r.get_dir().getHead().getX()==0)) {
+            Color esai=Color.BLACK;
+        }
+
+        Vector u=new Vector(-r.get_dir().getHead().getY(),r.get_dir().getHead().getX(),0);
+
+        if((-r.get_dir().getHead().getZ()==0)&&(r.get_dir().getHead().getY()==0)) {
+            Color esai=Color.BLACK;
+        }
+
+        Vector w=new Vector(0,-r.get_dir().getHead().getZ(),r.get_dir().getHead().getY());
+
         //u = -a/2 + ε a
         for (int i=0;i<4;i++) {
             double eps = random(-1, 1);
@@ -296,11 +372,35 @@ public class BasicRayTracer extends RayTracerBase {
             double u1 = -1 / 2 + eps * 1;
             double u2 = -1 / 2 + eps1 * 1;
             Vector v2=r.get_dir().add(u.scale(u1)).add(w.scale(u2));
+            if(v2.getHead().equals(ZERO))
+            {
+                eps = random(-1, 1);
+                 eps1 = random(-1, 1);
+                 u1 = -1 / 2 + eps * 1;
+                 u2 = -1 / 2 + eps1 * 1;
+                 v2=r.get_dir().add(u.scale(u1)).add(w.scale(u2));
+            }
 
             Ray r2=new Ray(point,v2);
             ListRay.add(r2);
             v2=null;
         }
         return ListRay ;// return r=2-(v.n).n
+
+
+    }
+
+    private Color calcGlobalEffects2(GeoPoint gp, Vector v, int level, double k) {
+        Color color = Color.BLACK;
+        Vector n = gp.geometry.getNormal(gp.point);
+        Material material = gp.geometry.getMaterial();
+        double kkr = k * material.Kr;
+        if (kkr > MIN_CALC_COLOR_K)
+            color = calcGlobalEffect2(constructReflectedRay2(gp.point, v, n), level, material.Kr, kkr);
+        double kkt = k * material.Kt;
+        if (kkt > MIN_CALC_COLOR_K)
+            color = color.add(
+                    calcGlobalEffect2(constructRefractedRay2(gp.point, v, n), level, material.Kt, kkt));
+        return color;
     }
 }
