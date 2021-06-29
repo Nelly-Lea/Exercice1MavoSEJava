@@ -101,45 +101,45 @@ public class Render {
 
 
 
-    public void renderImage2() {
-        //we check that all fields are not null
-        try {
-            if (_imageWriter == null) {
-                throw new MissingResourceException("missing ressource", ImageWriter.class.getName(), "");
-            }
-            if (_camera == null) {
-                throw new MissingResourceException("missing ressource", Camera.class.getName(), "");
-            }
-            if (_rayTracerBase == null) {
-                throw new MissingResourceException("missing ressource", RayTracerBase.class.getName(), "");
-            }
-
-            //rendering the image
-            int nX= _imageWriter.getNx();
-            int nY= _imageWriter.getNy();
-            List<Ray> ListRays=new LinkedList<>();
-            Color color=Color.BLACK;
-            for(int i=0;i<nY;i++) {
-                for (int j = 0; j < nX; j++) {
-                    ListRays= _camera.constructSeveralRayThroughPixel(nX, nY, j, i,amountRays);
-                    for (Ray ray:ListRays) {
-                        color=color.add(_rayTracerBase.traceRay(ray));
-
-                    }
-                   // Color pixelColor=_rayTracerBase.traceRay(ray);
-                    //_imageWriter.writePixel(j,i,pixelColor);
-                    for(int l=0;l<150;l++){
-                    color=color.add(_rayTracerBase.traceRay(ListRays.get(0)));}//le premier rau cest le rayon prinicpale
-
-                    color=color.reduce(ListRays.size()+150);// moyenne des couleurs des rayons lances
-                    _imageWriter.writePixel(j,i,color);
-                }
-            }
-
-        }catch(MissingResourceException e){
-            throw new UnsupportedOperationException("Not implemented yet "+e.getClassName());
-        }
-    }
+//    public void renderImage2() {
+//        //we check that all fields are not null
+//        try {
+//            if (_imageWriter == null) {
+//                throw new MissingResourceException("missing ressource", ImageWriter.class.getName(), "");
+//            }
+//            if (_camera == null) {
+//                throw new MissingResourceException("missing ressource", Camera.class.getName(), "");
+//            }
+//            if (_rayTracerBase == null) {
+//                throw new MissingResourceException("missing ressource", RayTracerBase.class.getName(), "");
+//            }
+//
+//            //rendering the image
+//            int nX= _imageWriter.getNx();
+//            int nY= _imageWriter.getNy();
+//            List<Ray> ListRays=new LinkedList<>();
+//            Color color=Color.BLACK;
+//            for(int i=0;i<nY;i++) {
+//                for (int j = 0; j < nX; j++) {
+//                    ListRays= _camera.constructSeveralRayThroughPixel(nX, nY, j, i,amountRays);
+//                    for (Ray ray:ListRays) {
+//                        color=color.add(_rayTracerBase.traceRay(ray));
+//
+//                    }
+//                   // Color pixelColor=_rayTracerBase.traceRay(ray);
+//                    //_imageWriter.writePixel(j,i,pixelColor);
+//                    for(int l=0;l<150;l++){
+//                    color=color.add(_rayTracerBase.traceRay(ListRays.get(0)));}//le premier rau cest le rayon prinicpale
+//
+//                    color=color.reduce(ListRays.size()+150);// moyenne des couleurs des rayons lances
+//                    _imageWriter.writePixel(j,i,color);
+//                }
+//            }
+//
+//        }catch(MissingResourceException e){
+//            throw new UnsupportedOperationException("Not implemented yet "+e.getClassName());
+//        }
+//    }
 
 
 
