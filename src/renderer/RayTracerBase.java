@@ -4,6 +4,8 @@ import primitives.Color;
 import primitives.Ray;
 import scene.Scene;
 
+import java.util.List;
+
 public abstract class RayTracerBase {
     protected Scene _scene ;
 
@@ -17,4 +19,5 @@ public abstract class RayTracerBase {
         this._scene = scene;
     }
     public abstract Color traceRay (Ray ray);
+    public abstract Color ColorAverage(List<Ray> rays);
 }

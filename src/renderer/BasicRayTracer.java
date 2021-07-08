@@ -41,6 +41,16 @@ public class BasicRayTracer extends RayTracerBase {
     public BasicRayTracer(Scene scene) {
         super(scene);
     }
+    public Color ColorAverage(List<Ray>rays)//fonction rajoutees
+    {
+        Color color=Color.BLACK;
+        for(Ray ray :rays)
+            color=color.add(traceRay(ray));
+        for(int i=0;i<150;i++)
+            color=color.add(traceRay(rays.get(0)));
+        return color.reduce(rays.size()+150);
+
+    }
 
     /**
      * traceRay receives a ray return a color for pixel. If there are intersections with the ray
@@ -472,7 +482,7 @@ public class BasicRayTracer extends RayTracerBase {
             Ray relfectray=constructReflectedRay(gp.point, v, n);
             //color = calcG(lobalEffect2(constructReflectedRay2(gp.point, v, n), level, material.Kr, kkr);
          //   color=color.add(constructReflectedRay2(gp.point,relfectray.get_dir(), n)).scale(material.Kr);
-            color=color.add(calcSampledColor(0.05, level, relfectray,n, kkr)).scale(material.Kr);
+            color=color.add(calcSampledColor(0.03, level, relfectray,n, kkr)).scale(material.Kr);
          //   color=color.add(calcSampledColor1(level,relfectray,n,kkr)).scale(material.Kr);
 
         }
@@ -482,7 +492,7 @@ public class BasicRayTracer extends RayTracerBase {
 //            color = color.add(
 //                    calcGlobalEffect2(constructRefractedRay2(gp.point, v, n), level, material.Kt, kkt));
             //color=color.add(constructRefractedRay2(gp.point, refractedray.get_dir(),n)).scale(material.Kt);
-           color=color.add(calcSampledColor(0.05, level, refractedray,n, kkt)).scale(material.Kt);
+           color=color.add(calcSampledColor(0.03, level, refractedray,n, kkt)).scale(material.Kt);
            // color=color.add(calcSampledColor1(level,refractedray,n,kkt)).scale(material.Kt);
         }
         return color;
@@ -684,6 +694,7 @@ public class BasicRayTracer extends RayTracerBase {
         } else
             return color.add(_scene.background);
     }
+
 
 
 }

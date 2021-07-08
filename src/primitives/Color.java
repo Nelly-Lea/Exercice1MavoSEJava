@@ -1,5 +1,7 @@
 package primitives;
 
+import static primitives.Util.alignZero;
+
 /**
  * Wrapper class for java.jwt.Color The constructors operate with any
  * non-negative RGB values. The colors are maintained without upper limit of
@@ -13,19 +15,20 @@ public class Color {
      * The internal fields tx`o maintain RGB components as double numbers from 0 to
      * whatever...
      */
-    final private double r ;
-    final private double g ;
-    final private double b ;
+    final private double r;
+    final private double g;
+    final private double b;
 
     public static final Color BLACK = new Color();
+    private static final double COLORTRESHOLD = 0.10d;
 
     /**
      * Default constructor - to generate Black Color (privately)
      */
     private Color() {
-        r=0.0;
-        g=0.0;
-        b=0.0;
+        r = 0.0;
+        g = 0.0;
+        b = 0.0;
     }
 
     /**
@@ -65,7 +68,6 @@ public class Color {
         g = other.getGreen();
         b = other.getBlue();
     }
-
 
 
     /**
@@ -121,6 +123,14 @@ public class Color {
         if (k < 1)
             throw new IllegalArgumentException("Can't scale a color by a by a number lower than 1");
         return new Color(r / k, g / k, b / k);
+    }
+
+    public boolean equal(Color c) {
+        double d = Math.sqrt((r - c.r) * (r - c.r) + (g - c.g) * (g - c.g) + (b - c.b) * (b - c.b));
+        if (alignZero(d / 441.67295593006 - COLORTRESHOLD) <= 0) //Math.sqrt(255*255+255*255+255*255)
+            return true;
+        else
+            return false;
     }
 
 }

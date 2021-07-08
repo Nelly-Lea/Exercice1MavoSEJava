@@ -2,6 +2,7 @@ package renderer;
 
 import elements.Camera;
 import primitives.Color;
+import primitives.Point3D;
 import primitives.Ray;
 
 import java.util.LinkedList;
@@ -9,12 +10,41 @@ import java.util.List;
 import java.util.MissingResourceException;
 
 public class Render {
+
+    private Camera camera;
+    private ImageWriter imageWriter;
+    private RayTracerBase tracer;
+    private static final String RESOURCE_ERROR = "Renderer resource not set";
+    private static final String RENDER_CLASS = "Render";
+    private static final String IMAGE_WRITER_COMPONENT = "Image writer";
+    private static final String CAMERA_COMPONENT = "Camera";
+    private static final String RAY_TRACER_COMPONENT = "Ray tracer";
+
+
+
     ImageWriter _imageWriter = null;
 
+
     Camera _camera = null;
-    RayTracerBase _rayTracerBase=null;
+    RayTracerBase _rayTracerBase = null;
     int sample;
     int amountRays;
+    int level_adaptive_supersampling=0;
+
+    public void setLevel_adaptive_supersampling(int level) {
+        level_adaptive_supersampling = level;
+
+    }
+
+
+
+
+
+    private int threadsCount = 0;
+    private static final int SPARE_THREADS = 2; // Spare threads if trying to use all the cores
+    private boolean print = false; // printing progress percentage
+
+
 
     public int getAmountRays() {
         return amountRays;
@@ -43,297 +73,538 @@ public class Render {
     /**
      * constructor that creates a ray for every pixel and return the color of every pixel
      */
-//    public void renderImage() {
-//        //we check that all fields are not null
-//        try {
-//            if (_imageWriter == null) {
-//                throw new MissingResourceException("missing ressource", ImageWriter.class.getName(), "");
-//            }
-//            if (_camera == null) {
-//                throw new MissingResourceException("missing ressource", Camera.class.getName(), "");
-//            }
-//            if (_rayTracerBase == null) {
-//                throw new MissingResourceException("missing ressource", RayTracerBase.class.getName(), "");
-//            }
-//
-//            //rendering the image
-//            int nX= _imageWriter.getNx();
-//            int nY= _imageWriter.getNy();
-//            for(int i=0;i<nY;i++) {
-//                for (int j = 0; j < nX; j++) {
-//                    Ray ray = _camera.constructRayThroughPixel(nX, nY, j, i);
-//                    Color pixelColor=_rayTracerBase.traceRay(ray);
-//                    _imageWriter.writePixel(j,i,pixelColor);
-//                }
-//            }
-//
-//        }catch(MissingResourceException e){
-//            throw new UnsupportedOperationException("Not implemented yet "+e.getClassName());
-//        }
-//    }
+    public void renderImage() {
+        //we check that all fields are not null
+        try {
+            if (_imageWriter == null) {
+                throw new MissingResourceException("missing ressource", ImageWriter.class.getName(), "");
+            }
+            if (_camera == null) {
+                throw new MissingResourceException("missing ressource", Camera.class.getName(), "");
+            }
+            if (_rayTracerBase == null) {
+                throw new MissingResourceException("missing ressource", RayTracerBase.class.getName(), "");
+            }
 
-    public void printGrid(int interval, Color color) {
+            //rendering the image
+            int nX = _imageWriter.getNx();
+            int nY = _imageWriter.getNy();
+            for (int i = 0; i < nY; i++) {
+                for (int j = 0; j < nX; j++) {
+                    Ray ray = _camera.constructRayThroughPixel(nX, nY, j, i);
+                    Color pixelColor = _rayTracerBase.traceRay(ray);
+                    _imageWriter.writePixel(j, i, pixelColor);
+                }
+            }
 
-        if(_imageWriter==null){
-            throw new MissingResourceException("empty field","ImageWriter","_imageWriter");
+        } catch (MissingResourceException e) {
+            throw new UnsupportedOperationException("Not implemented yet " + e.getClassName());
         }
+    }
+
+    /**
+     * Create a grid [over the picture] in the pixel color map. given the grid's
+     * step and color.
+     *
+     * @param step  grid's step
+     * @param color grid's color
+     */
+    public void printGrid(int step, Color color) {
+        if (_imageWriter == null)
+            throw new MissingResourceException(RESOURCE_ERROR, RENDER_CLASS, IMAGE_WRITER_COMPONENT);
+
         int nX = _imageWriter.getNx();
         int nY = _imageWriter.getNy();
-        for (int i = 0; i < nY; i++) {
-            for (int j = 0; j < nX; j++) {
-                if (i % interval == 0 || j % interval == 0) {
+
+        for (int i = 0; i < nY; ++i)
+            for (int j = 0; j < nX; ++j)
+                if (j % step == 0 || i % step == 0)
+                    _imageWriter.writePixel(j, i, color);
+    }
+
+
+    /**
+     * Produce a rendered image file
+     */
+    public void writeToImage() {
+        if (_imageWriter == null)
+            throw new MissingResourceException(RESOURCE_ERROR, RENDER_CLASS, IMAGE_WRITER_COMPONENT);
+
+        _imageWriter.writeToImage();
+    }
+
+    /**
+     * Cast ray from camera in order to color a pixel
+     * @param nX resolution on X axis (number of pixels in row)
+     * @param nY resolution on Y axis (number of pixels in column)
+     * @param col pixel's column number (pixel index in row)
+     * @param row pixel's row number (pixel index in column)
+     */
+    private void castRay(int nX, int nY, int col, int row) {
+        Ray ray = _camera.constructRayThroughPixel(nX, nY, col, row);
+        Color color = _rayTracerBase.traceRay(ray);
+        _imageWriter.writePixel(col, row, color);
+    }
+
+//    private Color castRay1(int nX, int nY, int col, int row, int level) {
+//        List<Ray> rays = _camera.constructListRayThroughPixel(nX, nY, col, row);
+//        Color color = _rayTracerBase.traceRay(rays.get(0));
+//        Color colorlt = _rayTracerBase.traceRay(rays.get(1));
+//        Color colorrt = _rayTracerBase.traceRay(rays.get(2));
+//        Color colorbl = _rayTracerBase.traceRay(rays.get(3));
+//        Color colorbr = _rayTracerBase.traceRay(rays.get(4));
+//        Color color1=Color.BLACK;
+//        Color color2=Color.BLACK;
+//        Color color3=Color.BLACK;
+//        Color color4=Color.BLACK;
+//
+//
+//        if(colorlt.equal(color))
+//        {
+//            color1=colorlt.add(color).reduce(2);
+//        }
+//        else{
+//            color1=
+//        }
+//        Color result=color1.add(color2,color3,color4).reduce(4);
+////        _imageWriter.writePixel(col, row, color);
+//    }
+
+
+    /**
+     * This function renders image's pixel color map from the scene included with
+     * the Renderer object - with multi-threading
+     */
+    private void renderImageThreaded() {
+        final int nX = _imageWriter.getNx();
+        final int nY = _imageWriter.getNy();
+        final Pixel thePixel = new Pixel(nY, nX);
+        // Generate threads
+        Color pixelColor=Color.BLACK;
+        Thread[] threads = new Thread[threadsCount];
+        for (int i = threadsCount - 1; i >= 0; --i) {
+            threads[i] = new Thread(() -> {
+                Pixel pixel = new Pixel();
+                while (thePixel.nextPixel(pixel)) {
+                    if (level_adaptive_supersampling == 0)
+                        castRay(nX, nY, pixel.col, pixel.row);
+                    else {
+
+
+                        _imageWriter.writePixel(pixel.col, pixel.row, AdpativeSuperSampling(nX, nY, pixel.row, pixel.col, _rayTracerBase));
+                    }
+                }
+                   // castRay(nX, nY, pixel.col, pixel.row);
+            });
+        }
+        // Start threads
+        for (Thread thread : threads)
+            thread.start();
+
+        // Print percents on the console
+        thePixel.print();
+
+        // Ensure all threads have finished
+        for (Thread thread : threads)
+            try {
+                thread.join();
+            } catch (Exception e) {
+            }
+
+        if (print)
+            System.out.print("\r100%");
+    }
+
+    /**
+     * This function renders image's pixel color map from the scene included with
+     * the Renderer object
+     */
+    public void renderImage4() {
+        if (_imageWriter == null)
+            throw new MissingResourceException(RESOURCE_ERROR, RENDER_CLASS, IMAGE_WRITER_COMPONENT);
+        if (_camera == null)
+            throw new MissingResourceException(RESOURCE_ERROR, RENDER_CLASS, CAMERA_COMPONENT);
+        if (_rayTracerBase== null)
+            throw new MissingResourceException(RESOURCE_ERROR, RENDER_CLASS, RAY_TRACER_COMPONENT);
+        Color pixelColor=Color.BLACK;
+        final int nX = _imageWriter.getNx();
+        final int nY = _imageWriter.getNy();
+        if (threadsCount == 0)
+            for (int i = 0; i < nY; ++i)
+                for (int j = 0; j < nX; ++j)
+                    if(level_adaptive_supersampling==0)
+                        castRay(nX, nY, j, i);
+                    else {
+
+                        pixelColor = AdpativeSuperSampling(nX, nY, i, j, _rayTracerBase);
+                        _imageWriter.writePixel(j, i, pixelColor);
+                    }
+        else
+            renderImageThreaded();
+    }
+
+
+    public void renderImage2() {
+        //we check that all fields are not null
+        try {
+            if (_imageWriter == null) {
+                throw new MissingResourceException("missing ressource", ImageWriter.class.getName(), "");
+            }
+            if (_camera == null) {
+                throw new MissingResourceException("missing ressource", Camera.class.getName(), "");
+            }
+            if (_rayTracerBase == null) {
+                throw new MissingResourceException("missing ressource", RayTracerBase.class.getName(), "");
+            }
+
+            //rendering the image
+            int nX = _imageWriter.getNx();
+            int nY = _imageWriter.getNy();
+            List<Ray> ListRays = new LinkedList<>();
+            Color color = Color.BLACK;
+            for (int i = 0; i < nY; i++) {
+                for (int j = 0; j < nX; j++) {
+                    ListRays = _camera.constructSeveralRayThroughPixel(nX, nY, j, i, amountRays);
+                    for (Ray ray : ListRays) {
+                        color = color.add(_rayTracerBase.traceRay(ray));
+
+                    }
+                    // Color pixelColor=_rayTracerBase.traceRay(ray);
+                    //_imageWriter.writePixel(j,i,pixelColor);
+                    for (int l = 0; l < 150; l++) {
+                        color = color.add(_rayTracerBase.traceRay(ListRays.get(0)));
+                    }//le premier rau cest le rayon prinicpale
+
+                    color = color.reduce(ListRays.size() + 150);// moyenne des couleurs des rayons lances
                     _imageWriter.writePixel(j, i, color);
                 }
             }
+
+        } catch (MissingResourceException e) {
+            throw new UnsupportedOperationException("Not implemented yet " + e.getClassName());
         }
     }
 
+    public void renderImage3() {
+        //we check that all fields are not null
+        try {
+            if (_imageWriter == null) {
+                throw new MissingResourceException("missing ressource", ImageWriter.class.getName(), "");
+            }
+            if (_camera == null) {
+                throw new MissingResourceException("missing ressource", Camera.class.getName(), "");
+            }
+            if (_rayTracerBase == null) {
+                throw new MissingResourceException("missing ressource", RayTracerBase.class.getName(), "");
+            }
+            Color pixelColor = Color.BLACK;
+
+            //rendering the image
+            int nX = _imageWriter.getNx();
+            int nY = _imageWriter.getNy();
+            for (int i = 0; i < nY; i++) {
+                for (int j = 0; j < nX; j++) {
+                    if(level_adaptive_supersampling==0) {
+                        Ray ray = _camera.constructRayThroughPixel(nX, nY, j, i);
+                        pixelColor = _rayTracerBase.traceRay(ray);
+                    }
+                    else {
+
+                        pixelColor = AdpativeSuperSampling(nX, nY, i, j, _rayTracerBase);
+                    }
+
+                    _imageWriter.writePixel(j, i, pixelColor);
+                }
+            }
+
+        } catch (MissingResourceException e) {
+            throw new UnsupportedOperationException("Not implemented yet " + e.getClassName());
+        }
+    }
+
+
     /**
-     * constructor checks if the imagewriter is null else call the constructor
+     * Set multi-threading <br>
+     * - if the parameter is 0 - number of cores less 2 is taken
+     *
+     * @param threads number of threads
+     * @return the Render object itself
      */
-    public void writeToImage(){
-        if(_imageWriter==null){
-            throw new MissingResourceException("empty field","ImageWriter","_imageWriter");
+    public Render setMultithreading(int threads) {
+        if (threads < 0)
+            throw new IllegalArgumentException("Multithreading parameter must be 0 or higher");
+        if (threads != 0)
+            this.threadsCount = threads;
+        else {
+            int cores = Runtime.getRuntime().availableProcessors() - SPARE_THREADS;
+            this.threadsCount = cores <= 2 ? 1 : cores;
         }
-        _imageWriter.writeToImage();
-
+        return this;
     }
 
-
-
-//    public void renderImage2() {
-//        //we check that all fields are not null
-//        try {
-//            if (_imageWriter == null) {
-//                throw new MissingResourceException("missing ressource", ImageWriter.class.getName(), "");
-//            }
-//            if (_camera == null) {
-//                throw new MissingResourceException("missing ressource", Camera.class.getName(), "");
-//            }
-//            if (_rayTracerBase == null) {
-//                throw new MissingResourceException("missing ressource", RayTracerBase.class.getName(), "");
-//            }
-//
-//            //rendering the image
-//            int nX= _imageWriter.getNx();
-//            int nY= _imageWriter.getNy();
-//            List<Ray> ListRays=new LinkedList<>();
-//            Color color=Color.BLACK;
-//            for(int i=0;i<nY;i++) {
-//                for (int j = 0; j < nX; j++) {
-//                    ListRays= _camera.constructSeveralRayThroughPixel(nX, nY, j, i,amountRays);
-//                    for (Ray ray:ListRays) {
-//                        color=color.add(_rayTracerBase.traceRay(ray));
-//
-//                    }
-//                   // Color pixelColor=_rayTracerBase.traceRay(ray);
-//                    //_imageWriter.writePixel(j,i,pixelColor);
-//                    for(int l=0;l<150;l++){
-//                    color=color.add(_rayTracerBase.traceRay(ListRays.get(0)));}//le premier rau cest le rayon prinicpale
-//
-//                    color=color.reduce(ListRays.size()+150);// moyenne des couleurs des rayons lances
-//                    _imageWriter.writePixel(j,i,color);
-//                }
-//            }
-//
-//        }catch(MissingResourceException e){
-//            throw new UnsupportedOperationException("Not implemented yet "+e.getClassName());
-//        }
-//    }
-
-
-
-   // package renderer;
+    /**
+     * Set debug printing on
+     *
+     * @return the Render object itself
+     */
+    public Render setDebugPrint() {
+        print = true;
+        return this;
+    }
 
     /**
-     * Renderer class is responsible for generating pixel color map from a graphic
-     * scene, using ImageWriter class
+     * Pixel is an internal helper class whose objects are associated with a Render
+     * object that they are generated in scope of. It is used for multithreading in
+     * the Renderer and for follow up its progress.<br/>
+     * There is a main follow up object and several secondary objects - one in each
+     * thread.
      *
      * @author Dan
+     *
      */
-   // public class Render {
-        // ...........
-        private int _threads = 1;
-        private final int SPARE_THREADS = 2;
-        private boolean _print = false;
+    private class Pixel {
+        private long maxRows = 0;
+        private long maxCols = 0;
+        private long pixels = 0;
+        public volatile int row = 0;
+        public volatile int col = -1;
+        private long counter = 0;
+        private int percents = 0;
+        private long nextCounter = 0;
 
         /**
-         * Pixel is an internal helper class whose objects are associated with a Render object that
-         * they are generated in scope of. It is used for multithreading in the Renderer and for follow up
-         * its progress.<br/>
-         * There is a main follow up object and several secondary objects - one in each thread.
-         * @author Dan
+         * The constructor for initializing the main follow up Pixel object
          *
+         * @param maxRows the amount of pixel rows
+         * @param maxCols the amount of pixel columns
          */
-        private class Pixel {
-            private long _maxRows = 0;
-            private long _maxCols = 0;
-            private long _pixels = 0;
-            public volatile int row = 0;
-            public volatile int col = -1;
-            private long _counter = 0;
-            private int _percents = 0;
-            private long _nextCounter = 0;
-
-            /**
-             * The constructor for initializing the main follow up Pixel object
-             * @param maxRows the amount of pixel rows
-             * @param maxCols the amount of pixel columns
-             */
-            public Pixel(int maxRows, int maxCols) {
-                _maxRows = maxRows;
-                _maxCols = maxCols;
-                _pixels = maxRows * maxCols;
-                _nextCounter = _pixels / 100;
-                if (Render.this._print) System.out.printf("\r %02d%%", _percents);
-            }
-
-            /**
-             *  Default constructor for secondary Pixel objects
-             */
-            public Pixel() {}
-
-            /**
-             * Internal function for thread-safe manipulating of main follow up Pixel object - this function is
-             * critical section for all the threads, and main Pixel object data is the shared data of this critical
-             * section.<br/>
-             * The function provides next pixel number each call.
-             * @param target target secondary Pixel object to copy the row/column of the next pixel
-             * @return the progress percentage for follow up: if it is 0 - nothing to print, if it is -1 - the task is
-             * finished, any other value - the progress percentage (only when it changes)
-             */
-            private synchronized int nextP(Pixel target) {
-                ++col;
-                ++_counter;
-                if (col < _maxCols) {
-                    target.row = this.row;
-                    target.col = this.col;
-                    if (_counter == _nextCounter) {
-                        ++_percents;
-                        _nextCounter = _pixels * (_percents + 1) / 100;
-                        return _percents;
-                    }
-                    return 0;
-                }
-                ++row;
-                if (row < _maxRows) {
-                    col = 0;
-                    if (_counter == _nextCounter) {
-                        ++_percents;
-                        _nextCounter = _pixels * (_percents + 1) / 100;
-                        return _percents;
-                    }
-                    return 0;
-                }
-                return -1;
-            }
-
-            /**
-             * Public function for getting next pixel number into secondary Pixel object.
-             * The function prints also progress percentage in the console window.
-             * @param target target secondary Pixel object to copy the row/column of the next pixel
-             * @return true if the work still in progress, -1 if it's done
-             */
-            public boolean nextPixel(Pixel target) {
-                int percents = nextP(target);
-                if (percents > 0)
-                    if (Render.this._print) System.out.printf("\r %02d%%", percents);
-                if (percents >= 0)
-                    return true;
-                if (Render.this._print) System.out.printf("\r %02d%%", 100);
-                return false;
-            }
+        public Pixel(int maxRows, int maxCols) {
+            this.maxRows = maxRows;
+            this.maxCols = maxCols;
+            this.pixels = (long) maxRows * maxCols;
+            this.nextCounter = this.pixels / 100;
+            if (Render.this.print)
+                System.out.printf("\r %02d%%", this.percents);
         }
 
         /**
-         * This function renders image's pixel color map from the scene included with
-         * the Renderer object
+         * Default constructor for secondary Pixel objects
          */
-        public void renderImage() {
-            final Color color=Color.BLACK;
-            final Camera camera =this._camera ;///_scene.getCamera();
-            final int nX = _imageWriter.getNx();
-            final int nY = _imageWriter.getNy();
-            final double dist = camera.get_Distance();    //_rayTracerBase._scene.getDistance();
-            final double width =  camera.get_width();//_imageWriter.
-            final double height = _camera.get_height();//_imageWriter.getHeight();
-           // final Camera camera =this._camera ///_scene.getCamera();
+        public Pixel() {
+        }
 
-            final Pixel thePixel = new Pixel(nY, nX);
+        /**
+         * Internal function for thread-safe manipulating of main follow up Pixel object
+         * - this function is critical section for all the threads, and main Pixel
+         * object data is the shared data of this critical section.<br/>
+         * The function provides next pixel number each call.
+         *
+         * @param target target secondary Pixel object to copy the row/column of the
+         *               next pixel
+         * @return the progress percentage for follow up: if it is 0 - nothing to print,
+         *         if it is -1 - the task is finished, any other value - the progress
+         *         percentage (only when it changes)
+         */
+        private synchronized int nextP(Pixel target) {
+            ++col;
+            ++this.counter;
+            if (col < this.maxCols) {
+                target.row = this.row;
+                target.col = this.col;
+                if (Render.this.print && this.counter == this.nextCounter) {
+                    ++this.percents;
+                    this.nextCounter = this.pixels * (this.percents + 1) / 100;
+                    return this.percents;
+                }
+                return 0;
+            }
+            ++row;
+            if (row < this.maxRows) {
+                col = 0;
+                target.row = this.row;
+                target.col = this.col;
+                if (Render.this.print && this.counter == this.nextCounter) {
+                    ++this.percents;
+                    this.nextCounter = this.pixels * (this.percents + 1) / 100;
+                    return this.percents;
+                }
+                return 0;
+            }
+            return -1;
+        }
 
-            // Generate threads
-            Thread[] threads = new Thread[_threads];
-            for (int i = _threads - 1; i >= 0; --i) {
-                threads[i] = new Thread(() -> {
-                    Pixel pixel = new Pixel();
-                    while (thePixel.nextPixel(pixel)) {
-                        List<Ray> rays = camera.constructSeveralRayThroughPixel(nX, nY, pixel.col, pixel.row,amountRays //
-                               );
-                        for (Ray ray:rays) {
-                            color.add(_rayTracerBase.traceRay(ray));
+        /**
+         * Public function for getting next pixel number into secondary Pixel object.
+         * The function prints also progress percentage in the console window.
+         *
+         * @param target target secondary Pixel object to copy the row/column of the
+         *               next pixel
+         * @return true if the work still in progress, -1 if it's done
+         */
+        public boolean nextPixel(Pixel target) {
+            int percent = nextP(target);
+            if (Render.this.print && percent > 0)
+                synchronized (this) {
+                    notifyAll();
+                }
+            if (percent >= 0)
+                return true;
+            if (Render.this.print)
+                synchronized (this) {
+                    notifyAll();
+                }
+            return false;
+        }
 
+        /**
+         * Debug print of progress percentage - must be run from the main thread
+         */
+        public void print() {
+            if (Render.this.print)
+                while (this.percents < 100)
+                    try {
+                        synchronized (this) {
+                            wait();
                         }
-                        // Color pixelColor=_rayTracerBase.traceRay(ray);
-                        //_imageWriter.writePixel(j,i,pixelColor);
-                        for(int l=0;l<150;l++){
-                            color.add(_rayTracerBase.traceRay(rays.get(0)));}//le premier rau cest le rayon prinicpale
-
-                        color.reduce(rays.size()+150);// moyenne des couleurs des rayons lances
-                        _imageWriter.writePixel(pixel.col, pixel.row, color);
+                        System.out.printf("\r %02d%%", this.percents);
+                        System.out.flush();
+                    } catch (Exception e) {
                     }
-                });
-            }
-
-            // Start threads
-            for (Thread thread : threads) thread.start();
-
-            // Wait for all threads to finish
-            for (Thread thread : threads) try { thread.join(); } catch (Exception e) {}
-            if (_print) System.out.printf("\r100%%\n");
-        }
-
-        /**
-         * Set multithreading <br>
-         * - if the parameter is 0 - number of coress less 2 is taken
-         *
-         * @param threads number of threads
-         * @return the Render object itself
-         */
-        public Render setMultithreading(int threads) {
-            if (threads < 0)
-                throw new IllegalArgumentException("Multithreading patameter must be 0 or higher");
-            if (threads != 0)
-                _threads = threads;
-            else {
-                int cores = Runtime.getRuntime().availableProcessors() - SPARE_THREADS;
-                if (cores <= 2)
-                    _threads = 1;
-                else
-                    _threads = cores;
-            }
-            return this;
-        }
-
-        /**
-         * Set debug printing on
-         *
-         * @return the Render object itself
-         */
-        public Render setDebugPrint() {
-            _print = true;
-            return this;
         }
     }
 
-//// Example for setting multithreading and debug print in test files:
-//        ......
-//    ImageWriter imageWriter = new ImageWriter("teapot", 200, 200, 800, 800);
-//    Render render = new Render(imageWriter, scene) //
-//            .setMultithreading(3) //
-//            .setDebugPrint();
-//
-//		render.renderImage();
-//    // render.printGrid(50, java.awt.Color.YELLOW);
-//		render.writeToImage();
 
-//}
+
+    /**
+     *
+     * @param nX is number of pixels in x axis
+     * @param nY is number of pixel in y axis
+     * @param i is the row's number of the current pixel
+     * @param j is the column's number of the current pixel
+     * @param rayTracerBase
+     * @return
+     */
+    public Color AdpativeSuperSampling(int nX, int nY, int i, int j, RayTracerBase rayTracerBase) {
+
+        double Ry = _camera.get_height() / nY;// Ry is length of pixel
+        double Rx = _camera.get_width() / nX; //Rx is width of pixel
+        Point3D Pc = _camera.getP0().add(_camera.getvTo().scale(_camera.get_Distance()));// Pc is the interscetion point on the center of the viewplane
+        Point3D PcornerLT = Pc.add(_camera.getvRight().scale(-_camera.get_height() / 2).add(_camera.getvUp().scale(_camera.get_width() / 2))); //PcornerLT is the point on the top corner left of the viewplane
+        Point3D PLT;
+
+        if (j == 0 && i == 0)//if the current pixel is the first pixel at the top corner left
+            PLT = PcornerLT;
+        else {
+            if (j == 0 && i != 0)// if the current pixel is in the first column
+                PLT = PcornerLT.add(_camera.getvUp().scale(-Rx * i));
+            else if (i == 0 && j != 0)//if the current pixel is in the first row
+                PLT = PcornerLT.add(_camera.getvRight().scale(Ry * j));
+            else
+                PLT = PcornerLT.add(_camera.getvUp().scale(-Rx * i)).add(_camera.getvRight().scale(Ry * j));// if the current pixel is other
+        }
+        Point3D PRT = PLT.add(_camera.getvRight().scale(Ry));// PRT is the point at the top right of the current pixel
+        Point3D PBR = PLT.add(_camera.getvRight().scale(Ry).add(_camera.getvTo().scale(-Rx)));// PBR is the point at the bottom right of the current pixel
+        Point3D PBL = PLT.add(_camera.getvUp().scale(-Rx));// PBL is the point at the bottom left of the current pixel
+        Color color;
+        color = AdpativeSuperSamplingCalcCol(Rx, Ry, PLT, PRT, PBR, PBL, rayTracerBase);
+        return color;
+
+
+    }
+
+    public Color AdpativeSuperSamplingCalcCol(double Rx, double Ry, Point3D p0, Point3D p1, Point3D p2, Point3D p3, RayTracerBase rayTracerBase) {
+        Ray raylt = new Ray(_camera.getP0(), p0.subtract(_camera.getP0()));//
+        Color clt = rayTracerBase.traceRay(raylt);
+        Ray rayrt = new Ray(_camera.getP0(), p1.subtract(_camera.getP0()));
+        Color crt = rayTracerBase.traceRay(rayrt);
+        Ray rayrb = new Ray(_camera.getP0(), p2.subtract(_camera.getP0()));
+        Color crb = rayTracerBase.traceRay(rayrb);
+        Ray raylb = new Ray(_camera.getP0(), p3.subtract(_camera.getP0()));
+        Color clb = rayTracerBase.traceRay(raylb);
+        Color color=Color.BLACK;
+
+        if (clt.equal(crt) && crt.equal(crb) && crb.equal(clb))// if the 4 corners of the current pixel have a similar color return the average of the 4 colors
+            return color.add(clt,crt,crb,clb).reduce(4);
+
+        int level = level_adaptive_supersampling;
+        Color color1 = Color.BLACK;
+        color = AdaptiveSuperSamplingRecursive(Rx, Ry, p0, p1, p2, p3, rayTracerBase, clt, crt, crb, clb, level, color1);
+        return color;
+
+    }
+
+    public Color AdaptiveSuperSamplingRecursive(double Rx, double Ry, Point3D p0, Point3D p1, Point3D p2, Point3D p3, RayTracerBase rayTracerBase, Color c0, Color c1, Color c2, Color c3, int level, /*double prop,*/ Color color1) {
+        if (level == 0) //if level=0  we stop the recursive and we return the color
+            return color1;
+        Rx = Rx / 2; //Rx is the half the width of the pixel
+        Ry = Ry / 2;//Ry is the half the length of the pixel
+        Point3D p5 = p0.add(_camera.getvRight().scale(Ry)); //p5 is the midpoint between the top left point and the the top right point
+        Point3D p6 = p1.add(_camera.getvUp().scale(-Rx));//p6 is the midpoint between the top right point and the the bottom right point
+        Point3D p7 = p2.add(_camera.getvRight().scale(-Ry));//p7 is the midpoint between the bottom right point and the the bottom left point
+        Point3D p8 = p0.add(_camera.getvUp().scale(-Rx));//p8 is the midpoint between the bottom left point and the the top left point
+        Point3D p4 = p0.add(_camera.getvRight().scale(Ry).add(_camera.getvUp().scale(-Rx)));//p4 is the point in the center of the pixel
+        Ray ray5 = new Ray(_camera.getP0(), p5.subtract(_camera.getP0()));//ray5 is the ray that passes through p5
+        Color c5 = rayTracerBase.traceRay(ray5); //c5 is the color of ray5
+        Ray ray6 = new Ray(_camera.getP0(), p6.subtract(_camera.getP0()));
+        Color c6 = rayTracerBase.traceRay(ray6);
+        Ray ray7 = new Ray(_camera.getP0(), p7.subtract(_camera.getP0()));
+        Color c7 = rayTracerBase.traceRay(ray7);
+        Ray ray8 = new Ray(_camera.getP0(), p8.subtract(_camera.getP0()));
+        Color c8 = rayTracerBase.traceRay(ray8);
+        Ray ray4 = new Ray(_camera.getP0(), p4.subtract(_camera.getP0()));
+        Color c4 = rayTracerBase.traceRay(ray4);
+
+        //we pass on the 4 sub pixels formed
+        if (c0.equal(c5) && c5.equal(c4) && c4.equal(c8)) //if the 4 colors of the top left sub pixel are similar we return the average of the 4 colors
+        {
+            color1 = color1.add(c0,c5,c4,c8);
+            color1=color1.reduce(4);}
+        else {
+            if (level - 1 == 0) { //if the next time we call the function is the last time as we calculate the final color of the sub pixel
+                color1 = c0.add(c5).add(c4).add(c8);
+                color1 = color1.reduce(4);
+            }
+
+
+            color1 = color1.add(AdaptiveSuperSamplingRecursive(Rx, Ry, p0, p5, p4, p8, rayTracerBase, c0, c5, c4, c8, level - 1,color1)).reduce(2);
+
+        }
+
+        if (c5.equal(c1) && c1.equal(c6) && c6.equal(c4)) {//if the 4 colors of the top right sub pixel are similar we return the average of the 4 colors
+            color1 = color1.add(c5,c1,c6,c4);
+            color1 = color1.reduce(5);
+        } else {
+            if (level - 1 == 0) {
+                color1 = c5.add(c1).add(c6).add(c4);
+                color1 = color1.reduce(4);
+            }
+
+            color1 = color1.add(AdaptiveSuperSamplingRecursive(Rx, Ry, p5, p1, p6, p4, rayTracerBase, c5, c1, c6, c4, level - 1,color1)).reduce(2);
+
+        }
+        if (c4.equal(c6) && c6.equal(c2) && c2.equal(c7)) {//if the 4 colors of the bottom right sub pixel are similar we return the average of the 4 colors
+            color1 = color1.add(c4,c6,c2,c7);
+            color1 = color1.reduce(5);
+        } else {
+            if (level - 1 == 0) {
+                color1 = c4.add(c6).add(c2).add(c7);
+                color1 = color1.reduce(4);
+            }
+
+            color1 = color1.add(AdaptiveSuperSamplingRecursive(Rx, Ry, p4, p6, p2, p7, rayTracerBase, c4, c6, c2, c7, level - 1, color1)).reduce(2);
+        }
+        if (c8.equal(c4) && c4.equal(c7) && c7.equal(c3))//if the 4 colors of the bottom left sub pixel are similar we return the average of the 4 colors
+        {
+            color1 = color1.add(c8,c4,c7,c3);
+            color1=color1.reduce(5);}
+        else {
+            if (level - 1 == 0) {
+                color1 = c8.add(c4).add(c7).add(c3);
+                color1=color1.reduce(4);}
+            color1 = color1.add(AdaptiveSuperSamplingRecursive(Rx, Ry, p8, p4, p7, p3, rayTracerBase, c8, c4, c7, c3, level - 1,color1)).reduce(2);
+        }
+        return color1;
+    }
+
+
+}
