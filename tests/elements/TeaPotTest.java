@@ -1563,7 +1563,7 @@ public class TeaPotTest {
                 .setImageWriter(imageWriter) //
                 .setRayTracer(new BasicRayTracer(scene)) //
                 .setMultithreading(3).setDebugPrint();
-        render.renderImage4();
+        render.renderImage();
         render.printGrid(50, new Color(java.awt.Color.YELLOW));
         render.writeToImage();
     }

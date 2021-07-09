@@ -15,12 +15,21 @@ import static primitives.Util.*;
  */
 public class Cylinder extends Tube {
     final double _height;
-    // constructor
+
+    /**
+     * constructor
+     * @param radius
+     * @param axisRay
+     * @param height
+     */
     public Cylinder(double radius, Ray axisRay,double height) {
         super(radius,axisRay);
         _height = height;
     }
-    //return the normal of the cylinder at point p0
+    /**
+     * return the normal of the cylinder at point p0
+     */
+
     public Vector getNormal(Point3D p0)
     {
         Point3D o=_axisRay.get_p0();

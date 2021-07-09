@@ -326,7 +326,7 @@ public class ReflectionRefractionTests {
 
 
        // render.renderImageThreaded();
-        render.renderImage4();
+        render.renderImage();
         render.writeToImage();
     }
 
@@ -532,7 +532,7 @@ public class ReflectionRefractionTests {
 
 
 
-    render.renderImage2();
+    render.renderImage();
         render.writeToImage();
     }
 
@@ -737,7 +737,7 @@ public class ReflectionRefractionTests {
                 .setCamera(camera) //
                 .setRayTracer(BS);
 
-        render.renderImage2();
+        render.renderImage();
         render.writeToImage();
     }
 
@@ -777,7 +777,7 @@ public class ReflectionRefractionTests {
                 render.setLevel_adaptive_supersampling(10);
 
 
-        render.renderImage4();
+        render.renderImage();
         render.writeToImage();
     }
 
@@ -943,7 +943,7 @@ public class ReflectionRefractionTests {
                 .setRayTracer(BS)
                 .setMultithreading(3).setDebugPrint();
 
-        render.renderImage4();
+        render.renderImage();
         render.writeToImage();
     }
 

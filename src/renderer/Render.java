@@ -70,37 +70,6 @@ public class Render {
         return this;
     }
 
-    /**
-     * constructor that creates a ray for every pixel and return the color of every pixel
-     */
-    public void renderImage() {
-        //we check that all fields are not null
-        try {
-            if (_imageWriter == null) {
-                throw new MissingResourceException("missing ressource", ImageWriter.class.getName(), "");
-            }
-            if (_camera == null) {
-                throw new MissingResourceException("missing ressource", Camera.class.getName(), "");
-            }
-            if (_rayTracerBase == null) {
-                throw new MissingResourceException("missing ressource", RayTracerBase.class.getName(), "");
-            }
-
-            //rendering the image
-            int nX = _imageWriter.getNx();
-            int nY = _imageWriter.getNy();
-            for (int i = 0; i < nY; i++) {
-                for (int j = 0; j < nX; j++) {
-                    Ray ray = _camera.constructRayThroughPixel(nX, nY, j, i);
-                    Color pixelColor = _rayTracerBase.traceRay(ray);
-                    _imageWriter.writePixel(j, i, pixelColor);
-                }
-            }
-
-        } catch (MissingResourceException e) {
-            throw new UnsupportedOperationException("Not implemented yet " + e.getClassName());
-        }
-    }
 
     /**
      * Create a grid [over the picture] in the pixel color map. given the grid's
@@ -146,29 +115,7 @@ public class Render {
         _imageWriter.writePixel(col, row, color);
     }
 
-//    private Color castRay1(int nX, int nY, int col, int row, int level) {
-//        List<Ray> rays = _camera.constructListRayThroughPixel(nX, nY, col, row);
-//        Color color = _rayTracerBase.traceRay(rays.get(0));
-//        Color colorlt = _rayTracerBase.traceRay(rays.get(1));
-//        Color colorrt = _rayTracerBase.traceRay(rays.get(2));
-//        Color colorbl = _rayTracerBase.traceRay(rays.get(3));
-//        Color colorbr = _rayTracerBase.traceRay(rays.get(4));
-//        Color color1=Color.BLACK;
-//        Color color2=Color.BLACK;
-//        Color color3=Color.BLACK;
-//        Color color4=Color.BLACK;
-//
-//
-//        if(colorlt.equal(color))
-//        {
-//            color1=colorlt.add(color).reduce(2);
-//        }
-//        else{
-//            color1=
-//        }
-//        Color result=color1.add(color2,color3,color4).reduce(4);
-////        _imageWriter.writePixel(col, row, color);
-//    }
+
 
 
     /**
@@ -219,7 +166,7 @@ public class Render {
      * This function renders image's pixel color map from the scene included with
      * the Renderer object
      */
-    public void renderImage4() {
+    public void renderImage() {
         if (_imageWriter == null)
             throw new MissingResourceException(RESOURCE_ERROR, RENDER_CLASS, IMAGE_WRITER_COMPONENT);
         if (_camera == null)
@@ -243,84 +190,48 @@ public class Render {
             renderImageThreaded();
     }
 
+//
+//    public void renderImage2() {
+//        //we check that all fields are not null
+//        try {
+//            if (_imageWriter == null) {
+//                throw new MissingResourceException("missing ressource", ImageWriter.class.getName(), "");
+//            }
+//            if (_camera == null) {
+//                throw new MissingResourceException("missing ressource", Camera.class.getName(), "");
+//            }
+//            if (_rayTracerBase == null) {
+//                throw new MissingResourceException("missing ressource", RayTracerBase.class.getName(), "");
+//            }
+//
+//            //rendering the image
+//            int nX = _imageWriter.getNx();
+//            int nY = _imageWriter.getNy();
+//            List<Ray> ListRays = new LinkedList<>();
+//            Color color = Color.BLACK;
+//            for (int i = 0; i < nY; i++) {
+//                for (int j = 0; j < nX; j++) {
+//                    ListRays = _camera.constructSeveralRayThroughPixel(nX, nY, j, i, amountRays);
+//                    for (Ray ray : ListRays) {
+//                        color = color.add(_rayTracerBase.traceRay(ray));
+//
+//                    }
+//                    // Color pixelColor=_rayTracerBase.traceRay(ray);
+//                    //_imageWriter.writePixel(j,i,pixelColor);
+//                    for (int l = 0; l < 150; l++) {
+//                        color = color.add(_rayTracerBase.traceRay(ListRays.get(0)));
+//                    }//le premier rau cest le rayon prinicpale
+//
+//                    color = color.reduce(ListRays.size() + 150);// moyenne des couleurs des rayons lances
+//                    _imageWriter.writePixel(j, i, color);
+//                }
+//            }
+//
+//        } catch (MissingResourceException e) {
+//            throw new UnsupportedOperationException("Not implemented yet " + e.getClassName());
+//        }
+//    }
 
-    public void renderImage2() {
-        //we check that all fields are not null
-        try {
-            if (_imageWriter == null) {
-                throw new MissingResourceException("missing ressource", ImageWriter.class.getName(), "");
-            }
-            if (_camera == null) {
-                throw new MissingResourceException("missing ressource", Camera.class.getName(), "");
-            }
-            if (_rayTracerBase == null) {
-                throw new MissingResourceException("missing ressource", RayTracerBase.class.getName(), "");
-            }
-
-            //rendering the image
-            int nX = _imageWriter.getNx();
-            int nY = _imageWriter.getNy();
-            List<Ray> ListRays = new LinkedList<>();
-            Color color = Color.BLACK;
-            for (int i = 0; i < nY; i++) {
-                for (int j = 0; j < nX; j++) {
-                    ListRays = _camera.constructSeveralRayThroughPixel(nX, nY, j, i, amountRays);
-                    for (Ray ray : ListRays) {
-                        color = color.add(_rayTracerBase.traceRay(ray));
-
-                    }
-                    // Color pixelColor=_rayTracerBase.traceRay(ray);
-                    //_imageWriter.writePixel(j,i,pixelColor);
-                    for (int l = 0; l < 150; l++) {
-                        color = color.add(_rayTracerBase.traceRay(ListRays.get(0)));
-                    }//le premier rau cest le rayon prinicpale
-
-                    color = color.reduce(ListRays.size() + 150);// moyenne des couleurs des rayons lances
-                    _imageWriter.writePixel(j, i, color);
-                }
-            }
-
-        } catch (MissingResourceException e) {
-            throw new UnsupportedOperationException("Not implemented yet " + e.getClassName());
-        }
-    }
-
-    public void renderImage3() {
-        //we check that all fields are not null
-        try {
-            if (_imageWriter == null) {
-                throw new MissingResourceException("missing ressource", ImageWriter.class.getName(), "");
-            }
-            if (_camera == null) {
-                throw new MissingResourceException("missing ressource", Camera.class.getName(), "");
-            }
-            if (_rayTracerBase == null) {
-                throw new MissingResourceException("missing ressource", RayTracerBase.class.getName(), "");
-            }
-            Color pixelColor = Color.BLACK;
-
-            //rendering the image
-            int nX = _imageWriter.getNx();
-            int nY = _imageWriter.getNy();
-            for (int i = 0; i < nY; i++) {
-                for (int j = 0; j < nX; j++) {
-                    if(level_adaptive_supersampling==0) {
-                        Ray ray = _camera.constructRayThroughPixel(nX, nY, j, i);
-                        pixelColor = _rayTracerBase.traceRay(ray);
-                    }
-                    else {
-
-                        pixelColor = AdpativeSuperSampling(nX, nY, i, j, _rayTracerBase);
-                    }
-
-                    _imageWriter.writePixel(j, i, pixelColor);
-                }
-            }
-
-        } catch (MissingResourceException e) {
-            throw new UnsupportedOperationException("Not implemented yet " + e.getClassName());
-        }
-    }
 
 
     /**
