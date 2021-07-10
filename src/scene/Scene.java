@@ -11,7 +11,6 @@ import java.util.List;
 public class Scene {
     private final String _name;
     public Color background=Color.BLACK;
-  //  public AmbientLight ambientLight=new AmbientLight(new Color(192, 192, 192),1.d);
   public AmbientLight ambientLight=new AmbientLight(Color.BLACK,1.d);
     public Geometries geometries=null;
     public List<LightSource> lights =new LinkedList<>();
@@ -35,8 +34,12 @@ public class Scene {
         geometries = new Geometries();
     }
 
-    //chaining set method(this NOT a builder pattern)
 
+    /**
+     * chaining set method(this NOT a builder pattern)
+     * @param background
+     * @return
+     */
     public Scene setBackground(Color background) {
         this.background = background;
         return this;

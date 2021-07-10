@@ -323,31 +323,40 @@ public class BasicRayTracer extends RayTracerBase {
     }
 
     private static final Random RANDOM=new Random(System.currentTimeMillis());
+
+    /**
+     * we took this function on internet
+     * @param radius
+     * @param level
+     * @param refRay
+     * @param n
+     * @param k
+     * @return
+     */
     private Color calcSampledColor(double radius, int level, Ray refRay, Vector n, double k) {
 
 
-        Vector v=refRay.get_dir();
-        Point3D point=refRay.get_p0();
+        Vector v=refRay.get_dir();//director vector of the reflected or refracted ray
+        Point3D point=refRay.get_p0();// p0 of the reflected or refracted ray
 
-        GeoPoint gp = findClosestIntersection(refRay);
+        GeoPoint gp = findClosestIntersection(refRay);// gp is the closest GeoPoint intersection with the ray
 
 
 
         Color color=Color.BLACK;
-        List<Ray> ListRay=new LinkedList<Ray>();
         double ndir=alignZero(v.dotProduct(n));
-        if(ndir==0) {
+        if(ndir==0) {// if the director vector of the ray and the normal are perpendicular
 
-            return color;
+            return color;// return black
 
         }
-        Color bg = _scene.background;
+        Color bg = _scene.background;// bg is the color of the background
         if(gp==null)
-            color=bg;
+            color=bg;//if there is no intersection we return the background color
         else
 
-         color = calcColor(gp, refRay, level - 1, k);
-        Ray r= new Ray(point,n, v);
+         color = calcColor(gp, refRay, level - 1, k);// color of gp
+        Ray r= new Ray(point,n, v);// r is new version of reflected or refracted ray (with delta)
         if(this.getSampleCount()==0)
             return color;
 
@@ -355,7 +364,7 @@ public class BasicRayTracer extends RayTracerBase {
         double y = v.getHead().getY();
         double z =v.getHead().getZ();
 
-        Vector u = null;
+        Vector u = null;// u is perpendicular to vector v (director vector of reflected or refracted ray)
         if (x <= y) {
             if (x <= z)
                 u = new Vector(0, z, -y).normalize();
@@ -368,7 +377,7 @@ public class BasicRayTracer extends RayTracerBase {
                 u = new Vector(-y, x, 0).normalize();
         }
 
-        Vector w= u.crossProduct(refRay.get_dir()).normalize();
+        Vector w= u.crossProduct(refRay.get_dir()).normalize();// w is perpendicular to v and u
 
         for (int i=0;i<this.getSampleCount()-1;i++) {
             double nw;
@@ -380,26 +389,25 @@ public class BasicRayTracer extends RayTracerBase {
                 double sinTeta = Math.sqrt(1 - cosTeta * cosTeta);
 
                 p0 = r.get_p0();
-                double distance = r.get_dir().length();
-                Point3D pc = p0.add(r.get_dir().scale(distance));
+                double distance = r.get_dir().length();//length of refected or refracted ray
+                Point3D pc = p0.add(r.get_dir().scale(distance));// pc is point at the end of the reflected or refracted ray
                 pt = pc;
                 if (!isZero(cosTeta))
-                    pt = pt.add(u.scale(cosTeta));
+                    pt = pt.add(u.scale(cosTeta));// we move pc point of cosTeta on u axis
                 if (!isZero(sinTeta))
-                    pt = pt.add(w.scale(sinTeta));
+                    pt = pt.add(w.scale(sinTeta));//we move pc point of sinteta on w axis
                 z=radius*(RANDOM.nextDouble()*2-1);
-                pt=pc.add(pt.subtract(pc).scale(z));
-                nw= alignZero(n.dotProduct(pt.subtract(refRay.get_p0())));
-
+                pt=pc.add(pt.subtract(pc).scale(z));//we move pc point of z
+                nw= alignZero(n.dotProduct(pt.subtract(refRay.get_p0())));// nw is dotproduction between the normal and the vector between pc and the new point
             } while (nw<0&&ndir>0 ||ndir<0&&nw>0);
 
-            Ray ray=new Ray(p0,pt.subtract(p0));
+            Ray ray=new Ray(p0,pt.subtract(p0));// ray is the new ray in the beam of ray
             gp=findClosestIntersection(ray);
-            color=color.add(gp==null?bg:calcColor(gp,ray,level-1,k));
+            color=color.add(gp==null?bg:calcColor(gp,ray,level-1,k));// we add to color the calculated color of gp
 
         }
 
-        return color.reduce(this.getSampleCount()+1);
+        return color.reduce(this.getSampleCount()+1);// the average of all colors
 
     }
 

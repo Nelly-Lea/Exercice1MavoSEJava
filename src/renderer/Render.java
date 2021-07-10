@@ -27,10 +27,13 @@ public class Render {
 
     Camera _camera = null;
     RayTracerBase _rayTracerBase = null;
-    int sample;
     int amountRays;
     int level_adaptive_supersampling=0;
 
+    /**
+     * setter level for the adaptive supersampling improvement
+     * @param level
+     */
     public void setLevel_adaptive_supersampling(int level) {
         level_adaptive_supersampling = level;
 
@@ -45,11 +48,10 @@ public class Render {
     private boolean print = false; // printing progress percentage
 
 
-
-    public int getAmountRays() {
-        return amountRays;
-    }
-
+    /**
+     * setter amount rays for supersampling imrpovement
+     * @param amountRays
+     */
     public void setAmountRays(int amountRays) {
         this.amountRays = amountRays;
     }
