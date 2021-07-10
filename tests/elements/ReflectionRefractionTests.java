@@ -539,7 +539,7 @@ public class ReflectionRefractionTests {
     }
 
     @Test
-    public void ImageTestScene2() {
+    public void ImageTest1() {
 //        Camera camera = new Camera(new Point3D(-8, -8, 100), new Vector(0, 0, -10), new Vector(0, 1, 0)) //
 //                .setViewPlaneSize(200, 200).setDistance(1000);
         Camera camera = new Camera(new Point3D(-7.68, -1.97, 0), new Vector(1.1, 0.2, 0), new Vector(0, 0, 1)) //
@@ -730,7 +730,7 @@ public class ReflectionRefractionTests {
 ////                        .setKl(1E-5).setKq(1.5E-7));
 //        scene.lights.add(new SpotLight(new Color(2000, 2000, 2000), new Point3D(-8.19, -5.44, 2), new Vector(-1.4,3.73,5)));
 
-        ImageWriter imageWriter = new ImageWriter("OurImageScene2", 600, 600);
+        ImageWriter imageWriter = new ImageWriter("OurImageScene", 600, 600);
         BasicRayTracer BS=new BasicRayTracer(scene);
         BS.setSampleCount(1);
         Render render = new Render();
@@ -1115,7 +1115,7 @@ public class ReflectionRefractionTests {
         render.renderImage();
         render.writeToImage();
     }
-    public void ImageTest2() {
+    public void ImageTestScene2() {
 //        Camera camera = new Camera(new Point3D(-8, -8, 100), new Vector(0, 0, -10), new Vector(0, 1, 0)) //
 //                .setViewPlaneSize(200, 200).setDistance(1000);
         Camera camera = new Camera(new Point3D(-7.68, -1.97, 0), new Vector(1.1, 0.2, 0), new Vector(0, 0, 1)) //
@@ -1170,7 +1170,7 @@ public class ReflectionRefractionTests {
 ////                        .setKl(1E-5).setKq(1.5E-7));
 //        scene.lights.add(new SpotLight(new Color(2000, 2000, 2000), new Point3D(-8.19, -5.44, 2), new Vector(-1.4,3.73,5)));
 
-        ImageWriter imageWriter = new ImageWriter("OurImageImprovementAdaptiveSupersampling", 600, 600);
+        ImageWriter imageWriter = new ImageWriter("OurImageScene2", 600, 600);
         BasicRayTracer BS=new BasicRayTracer(scene);
         BS.setSampleCount(10);
         Render render = new Render() //
