@@ -125,6 +125,11 @@ public class Color {
         return new Color(r / k, g / k, b / k);
     }
 
+    /**
+     * this function return true of 2 colors are similar
+     * @param c
+     * @return
+     */
     public boolean equal(Color c) {
         double d = Math.sqrt((r - c.r) * (r - c.r) + (g - c.g) * (g - c.g) + (b - c.b) * (b - c.b));
         if (alignZero(d / 441.67295593006 - COLORTRESHOLD) <= 0) //Math.sqrt(255*255+255*255+255*255)

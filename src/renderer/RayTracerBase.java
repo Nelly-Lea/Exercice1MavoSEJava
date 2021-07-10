@@ -19,5 +19,4 @@ public abstract class RayTracerBase {
         this._scene = scene;
     }
     public abstract Color traceRay (Ray ray);
-    public abstract Color ColorAverage(List<Ray> rays);
 }

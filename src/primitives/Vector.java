@@ -48,6 +48,7 @@ public class Vector {
     }
 
     /**
+     * this function makes the dotproduct between the vector object and the received vector
      * @param v
      * @return u1 * v1 + u2 * v2 + u3 * v3
      */
@@ -179,7 +180,6 @@ public class Vector {
         if (o == null || getClass() != o.getClass()) return false;
         Vector vector = (Vector) o;
         return _head.equals(((Vector) o)._head);
-//        Objects.equals(_head, vector._head);
 
     }
 

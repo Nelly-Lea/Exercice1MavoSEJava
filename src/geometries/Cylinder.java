@@ -17,7 +17,7 @@ public class Cylinder extends Tube {
     final double _height;
 
     /**
-     * constructor
+     * constructor of Cylinder
      * @param radius
      * @param axisRay
      * @param height

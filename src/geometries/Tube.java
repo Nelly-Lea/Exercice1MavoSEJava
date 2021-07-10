@@ -14,25 +14,31 @@ public class Tube extends RadialGeometry {
     }
 
 
-    //constructor that receives Ray and radius
+    /**
+     * constructor that receives Ray and radius
+     * @param radius
+     * @param axisRay
+     */
     public Tube(double radius, Ray axisRay) {
         super(radius);
         _axisRay = axisRay;
-//        if (isZero(radius))
-//            throw new IllegalArgumentException("radius cannot be ZERO");
-//        else
-//            _radius = radius;
+
 
     }
 
+    /**
+     * this function returns the normal to the Tube according to the received point
+     * @param p0
+     * @return
+     */
     public Vector getNormal(Point3D p0) {
 
-        Vector P_P0 = p0.subtract(_axisRay.get_p0());
-        double t = _axisRay.get_dir().dotProduct(P_P0);
+        Vector P_P0 = p0.subtract(_axisRay.get_p0());//vector between p0 and p0 of the axis ray
+        double t = _axisRay.get_dir().dotProduct(P_P0);// t is the dotproduct between the axis and p_p0
         Point3D O = _axisRay.get_p0().add(P_P0.scale(t));
         Vector N = p0.subtract(O);
         N.normalize();
-        return N;
+        return N;//return the normal
     }
 
     @Override
@@ -49,6 +55,4 @@ public class Tube extends RadialGeometry {
     }
 
 
-
-    //public List<IGeoPoint> findGeoIntersection(Ray ray, double maxDistance);
 }

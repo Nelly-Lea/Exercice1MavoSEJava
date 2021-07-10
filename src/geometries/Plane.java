@@ -28,18 +28,23 @@ public class Plane extends Geometry {
     public Vector getNormal() {
         return _normal;
     }
-//return the normal of the plane
-//    public Vector get_normal() {
-//        return _normal;
-//    }
 
-    // constructor that receives point that belongs to the plane and normal of the plane
+    /**
+     * constructor that receives point that belongs to the plane and normal of the plane
+     * @param q0
+     * @param normal
+     */
     public Plane(Point3D q0, Vector normal) {
         _q0 = q0;
         _normal = normal.normalized();
     }
 
-    //constructor that receives 3 points and do a plane from these 3 points
+    /**
+     * constructor that receives 3 points and do a plane from these 3 points
+     * @param p0
+     * @param p1
+     * @param p2
+     */
     public Plane(Point3D p0, Point3D p1, Point3D p2) {
         if ((p0.equals(p1) || (p1.equals(p2)) || (p0.equals(p2))))
             throw new IllegalArgumentException();
@@ -72,26 +77,28 @@ public class Plane extends Geometry {
     }
 
 
-
+    /**
+     * this function receives a ray and a double and returns a list of GeoPoint with the received ray
+     * @param ray
+     * @param maxDistance
+     * @return
+     */
     @Override
-   public List<GeoPoint> findGeoIntersections(Ray ray, double maxDistance) {///
-        Point3D p0 = ray.get_p0();
-        Vector v = ray.get_dir();
-        if (isZero(_normal.dotProduct(v))) {
+   public List<GeoPoint> findGeoIntersections(Ray ray, double maxDistance) {
+        Point3D p0 = ray.get_p0();// p0 of the received ray
+        Vector v = ray.get_dir();// director vector of the received ray
+        if (isZero(_normal.dotProduct(v))) { //if the director vector ray is on the plane
             return null;
         }
-        if ((p0.equals(_q0)) && !(isZero(_normal.dotProduct(v)))) {
-//            Point3D p= _q0;
-//
-//            return List.of(p);
+        if ((p0.equals(_q0)) && !(isZero(_normal.dotProduct(v)))) {//if the received ray is on the plane
             return null;
         }
-        double t = (_normal.dotProduct(_q0.subtract(p0))) / (_normal.dotProduct(v));
+        double t = (_normal.dotProduct(_q0.subtract(p0))) / (_normal.dotProduct(v));//t is the distance between the received ray and the plane
 
 
         if (t > 0&&(alignZero(t-maxDistance)<=0))
         {
-            Point3D p = ray.getPoint(t);
+            Point3D p = ray.getPoint(t);// p is the intersection point on the plane
 
             return List.of(new GeoPoint(this, p));
         }

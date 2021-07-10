@@ -6,6 +6,11 @@ import static primitives.Util.isZero;
 public abstract class RadialGeometry extends Geometry{
     final protected double _radius;
 
+    /**
+     * constructor of RdaialGeometry
+     * @param radius
+     */
+
     public RadialGeometry(double radius) {
         if (isZero(radius))
             throw new IllegalArgumentException("radius cannot be ZERO");

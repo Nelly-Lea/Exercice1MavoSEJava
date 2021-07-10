@@ -38,17 +38,22 @@ public class Sphere extends RadialGeometry{
     }
 
 
-
+    /**
+     * his function returns a list of GeoPoint intersection with the received ray
+     * @param ray
+     * @param maxDistance
+     * @return
+     */
     @Override
     public List<GeoPoint> findGeoIntersections(Ray ray , double maxDistance ) {///
-        Point3D p0=ray.get_p0();
-        Vector v=ray.get_dir();
+        Point3D p0=ray.get_p0();//p0 of the received ray
+        Vector v=ray.get_dir();//director vector of the received ray
 
-        if(p0.equals(_center)){
+        if(p0.equals(_center)){// we verify that p0 is not on the center of the sphere
             throw new IllegalArgumentException("Ray p0 cannot be equals to the center of the sphere");
         }
 
-        Vector u=_center.subtract(p0);
+        Vector u=_center.subtract(p0);// u is the vector between the center and p0
 
         double tm=alignZero(v.dotProduct(u));
         double d=alignZero(Math.sqrt(u.lengthSquared()-(tm*tm)));
@@ -64,19 +69,19 @@ public class Sphere extends RadialGeometry{
         boolean validT1=alignZero(t1-maxDistance)<=0;
         boolean validT2=alignZero(t2-maxDistance)<=0;
 
-        if(t1>0 && t2>0&& validT1&&validT2){
+        if(t1>0 && t2>0&& validT1&&validT2){//if there are 2 intersections
             Point3D p1=ray.getPoint(t1);
             Point3D p2= ray.getPoint(t2);
 
             return List.of(new GeoPoint(this,p1), new GeoPoint(this,p2));
         }
-        if(t1>0 &&validT1){
+        if(t1>0 &&validT1){//if there is one intersection point
             Point3D p1= ray.getPoint(t1);
 
             return List.of(new GeoPoint(this,p1));
         }
 
-        if(t2>0&& validT2){
+        if(t2>0&& validT2){//if there is one intersection point
             Point3D p2= ray.getPoint(t2);
 
             return List.of(new GeoPoint(this,p2));

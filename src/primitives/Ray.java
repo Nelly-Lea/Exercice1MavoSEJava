@@ -9,11 +9,14 @@ public class Ray {
     final Point3D _p0;
     final Vector _dir;
 
-    //contructor checks if the vector reveived dir is normal and if not,it normalizes it
+
+    /**
+     * contructor checks if the vector received dir is normal and if not,it normalizes it
+     * @param p0
+     * @param dir
+     */
     public Ray(Point3D p0, Vector dir) {
-//        if(dir.length()!=1) {
-//            dir=dir.normalized();
-//        }
+
         _p0 = p0;
         _dir = dir.normalized();
     }
@@ -49,24 +52,7 @@ public Ray (Point3D point, Vector n, Vector direction)
     }
 
 
-//    public Point3D findClosestPoint(Ray ray){
-//        List<GeoPoint>intersections= find
-//        Point3D result=null;
-//        double closestDistance=Double.MAX_VALUE;
-//
-//        if(pointsList==null){
-//            return null;
-//        }
-//        for(Point3D p:pointsList){
-//            double temp=p.distance(_p0);// temp is the distance between a point in the list and the _p0 of the ray
-//            if(temp<closestDistance){
-//                closestDistance=temp;// closestDistance is the minimum temp
-//                result=p;
-//            }
-//        }
-//        return result; //result is the closest point to the ray
-//
-//    }
+
     /**
      * @param o
      * @return true if the Ray received and the Ray on which the operation is performed are equal
@@ -101,7 +87,7 @@ public Ray (Point3D point, Vector n, Vector direction)
     }
 
     /**
-     * find the closest point tin geopoint list
+     * find the closest point in geopoint list
      * @param geoPointList list of geopoint
      * @return closest geopoint
      */

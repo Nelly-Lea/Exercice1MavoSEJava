@@ -11,11 +11,14 @@ import java.util.stream.Collectors;
  */
 
 public interface Intersectable {
-    //List<Point3D> findIntersections(Ray ray);
-
-    //default List<GeoPoint>
 
     public List<GeoPoint> findGeoIntersections(Ray ray ,double maxdistance);
+
+    /**
+     * this function received a ray and call the function findGeoIntersection(Ray,double)
+     * @param ray
+     * @return a list of GeoPoint that are the received ray intersects
+     */
     default List<GeoPoint> findGeoIntersections(Ray ray)
     {
         return findGeoIntersections(ray, Double.POSITIVE_INFINITY);
@@ -41,10 +44,16 @@ public interface Intersectable {
             if (o == null || getClass() != o.getClass()) return false;
             GeoPoint geoPoint = (GeoPoint) o;
           return(point.equals(geoPoint.point))&&(geometry.getClass().equals(geoPoint.geometry.getClass()));
-           //// return geometry.equals(geoPoint.geometry) && point.equals(geoPoint.point);
+
         }
 
     }
+
+    /**
+     *this function returns a list of intersections point with the received ray
+     * @param ray
+     * @return
+     */
 
     default List<Point3D> findIntersections(Ray ray) {
         var geoList = findGeoIntersections(ray);
