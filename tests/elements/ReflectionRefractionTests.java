@@ -317,7 +317,7 @@ public class ReflectionRefractionTests {
                 .setKl(4E-5).setKq(2E-7));
         ImageWriter imageWriter = new ImageWriter("ImageTest", 600, 600);
         BasicRayTracer BS=new BasicRayTracer(scene);
-        BS.setSampleCount(10);
+        BS.setSampleCount(1);
         Render render = new Render() //
                 .setImageWriter(imageWriter) //
                 .setCamera(camera) //
@@ -539,7 +539,7 @@ public class ReflectionRefractionTests {
     }
 
     @Test
-    public void ImageTest2() {
+    public void ImageTestScene2() {
 //        Camera camera = new Camera(new Point3D(-8, -8, 100), new Vector(0, 0, -10), new Vector(0, 1, 0)) //
 //                .setViewPlaneSize(200, 200).setDistance(1000);
         Camera camera = new Camera(new Point3D(-7.68, -1.97, 0), new Vector(1.1, 0.2, 0), new Vector(0, 0, 1)) //
@@ -730,11 +730,10 @@ public class ReflectionRefractionTests {
 ////                        .setKl(1E-5).setKq(1.5E-7));
 //        scene.lights.add(new SpotLight(new Color(2000, 2000, 2000), new Point3D(-8.19, -5.44, 2), new Vector(-1.4,3.73,5)));
 
-        ImageWriter imageWriter = new ImageWriter("OurImageImprovementSupersampling", 600, 600);
+        ImageWriter imageWriter = new ImageWriter("OurImageScene2", 600, 600);
         BasicRayTracer BS=new BasicRayTracer(scene);
         BS.setSampleCount(1);
         Render render = new Render();
-                 render.setAmountRays(80);//
                 render.setImageWriter(imageWriter) //
                 .setCamera(camera) //
                 .setRayTracer(BS);
@@ -1116,6 +1115,73 @@ public class ReflectionRefractionTests {
         render.renderImage();
         render.writeToImage();
     }
+    public void ImageTest2() {
+//        Camera camera = new Camera(new Point3D(-8, -8, 100), new Vector(0, 0, -10), new Vector(0, 1, 0)) //
+//                .setViewPlaneSize(200, 200).setDistance(1000);
+        Camera camera = new Camera(new Point3D(-7.68, -1.97, 0), new Vector(1.1, 0.2, 0), new Vector(0, 0, 1)) //
+                .setViewPlaneSize(200, 200).setDistance(350);
+        scene.setAmbientLight(new AmbientLight(new Color(java.awt.Color.black), 0.15));
+        /*1*/
+        scene.geometries.add(
+                //  /*14*/new Sphere(0.3, new Point3D(-1.29,0.8,0.23)).setEmmission(new Color(217,1,21)).setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(100).setKt(0.5).setKr(0.3)),
+                /*2*/new Sphere(0.4, new Point3D(6.76,6.95,0)).setEmmission(new Color(java.awt.Color.black)) .setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(30).setKt(1).setKr(0)),
+                /*14*/new Sphere(0.15, new Point3D(6.76,6.95,0)).setEmmission(new Color(249,66,158)) .setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(100).setKt(0.9).setKr(0)),
+                new Polygon(new Point3D(6,-6,-3),new Point3D(5.28,-3.92,0),new Point3D(6,-2,-3)).setEmmission(new Color(217,1,21)).setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(100).setKt(0.5).setKr(0.3)),
+                new Polygon(new Point3D(6,-2,-3),new Point3D(5.28,-3.92,0),new Point3D(3,-2,-3)).setEmmission(new Color(217,1,21)).setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(100).setKt(0.5).setKr(0.3)),
+                new Polygon(new Point3D(3,-2,-3),new Point3D(5.28,-3.92,0),new Point3D(3,-6,-3)).setEmmission(new Color(217,1,21)).setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(100).setKt(0.5).setKr(0.3)),
+                new Polygon(new Point3D(3,-6,-3),new Point3D(5.28,-3.92,0),new Point3D(6,-6,-3)).setEmmission(new Color(217,1,21)).setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(100).setKt(0.5).setKr(0.3)),
+                new Polygon(new Point3D(3,-6,-3),new Point3D(3,-2,-3),new Point3D(6,-2,-3),new Point3D(6,-6,-3)).setEmmission(new Color(217,1,21)).setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(100).setKt(0.5).setKr(0.3)),
+                new Polygon(new Point3D(3.75,14.23,-4),new Point3D(16.7,2,-4),new Point3D(12.57,1.59,10)).setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(30).setKt(0).setKr(1)),
+                new Polygon(new Point3D(12.57,1.59,10),new Point3D(2.87,-14.39,-4),new Point3D(14.7,2,-4)).setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(30).setKt(0).setKr(0)));
+        boolean turnon4=true;
+        if(turnon4){
+            scene.lights.add(new SpotLight(new Color(219,0,115), new Point3D(-1.38, 0.71, 1.34), new Vector(0.46, -0.46, -0.62)) //
+                    .setKl(4E-5).setKq(2E-7));}// le rose sur le plane
+//        scene.lights.add(new PointLight(new Color(400, 750, 500), new Point3D(-0.33, -0.77, -0.3)) // new Vector(0.19, -2.56, 5)
+//                .setKl(4E-5).setKq(2E-7));
+//        scene.lights.add(new PointLight( new Color(400, 750, 500), new Point3D(0.13, -1.03, 1.16)) // new Vector(0.19, -2.56, 5)
+//                .setKl(4E-5).setKq(2E-7));
+        // scene.lights.add(new SpotLight(new Color(400, 750, 500),new Point3D(2.33,-0.63,0.68), new Vector(-0.43,0,-0.04))  .setKl(4E-5).setKq(2E-7)); // new Vector(0.19, -2.56, 5)
+        boolean turnon3=true;
+        if(turnon3){
+            scene.lights.add(new PointLight(new Color(96, 80, 220), new Point3D(0.11,-1.32,0.56))//lumiere au fond plane blanche
+                    .setKl(0.00001).setKq(0.000001)); }// new Vector(0.19, -2.56, 5)
+        boolean turnon1=true;
+        if(turnon1) {
+            scene.lights.add(new DirectionalLight(new Color(75, 0, 130), new Vector(0, 0, -1))); // lumiere bleu sur plane
+        }
+        boolean turnon2=true;
+        if(turnon2) {
+            scene.lights.add(new SpotLight(new Color(0, 0, 400), new Point3D(1.77, -1.44, 1.77), new Vector(-0.18, 0.17, -0.33)) //
+                    .setKl(4E-5).setKq(2E-7));// le bleute sur le devant du plane
+        }
+//        scene.lights.add(new PointLight(new Color(255, 255, 255), new Point3D(-0.6,-1.4,0))//lumiere au fond plane blanche
+//                .setKl(0.00001).setKq(0.000001)); // new Vector(0.19, -2.56, 5)
+//        scene.lights.add(new PointLight(new Color(400, 750, 500), new Point3D(1.5,-0.3,1.98))//
+//                .setKl(4E-5).setKq(2E-7));
+        scene.lights.add(new PointLight(new Color(155, 155, 155), new Point3D(-0.61,-0.36,00.22))//lumiere au fond plane blanche
+                .setKl(0.00001).setKq(0.000001));
 
+        //    .setKl(4E-5).setKq(2E-7));
+        scene.lights.add(new PointLight(new Color(254,191,210), new Point3D(1,0.1,1.05)) // new Vector(0.19, -2.56, 5)
+                .setKl(4E-5).setKq(2E-7));
+        //  scene.lights.add( //
+//                new SpotLight(new Color(400, 240, 0), new Point3D(-8, 5, 0), new Vector(0, -6, 0)) //
+////                        .setKl(1E-5).setKq(1.5E-7));
+//        scene.lights.add(new SpotLight(new Color(2000, 2000, 2000), new Point3D(-8.19, -5.44, 2), new Vector(-1.4,3.73,5)));
+
+        ImageWriter imageWriter = new ImageWriter("OurImageImprovementAdaptiveSupersampling", 600, 600);
+        BasicRayTracer BS=new BasicRayTracer(scene);
+        BS.setSampleCount(10);
+        Render render = new Render() //
+                .setImageWriter(imageWriter) //
+                .setCamera(camera) //
+                .setRayTracer(BS);
+        // .setMultithreading(3).setDebugPrint();
+        //  render.setLevel_adaptive_supersampling(10);
+
+        render.renderImage();
+        render.writeToImage();
+    }
 
 }
