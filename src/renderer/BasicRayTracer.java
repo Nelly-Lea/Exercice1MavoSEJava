@@ -398,7 +398,7 @@ public class BasicRayTracer extends RayTracerBase {
                     pt = pt.add(w.scale(sinTeta));//we move pc point of sinteta on w axis
                 z=radius*(RANDOM.nextDouble()*2-1);
                 pt=pc.add(pt.subtract(pc).scale(z));//we move pc point of z
-                nw= alignZero(n.dotProduct(pt.subtract(refRay.get_p0())));// nw is dotproduction between the normal and the vector between pc and the new point
+                nw= alignZero(n.dotProduct(pt.subtract(refRay.get_p0())));// nw is dotproduct between the normal and the vector between pc and the new point
             } while (nw<0&&ndir>0 ||ndir<0&&nw>0);
 
             Ray ray=new Ray(p0,pt.subtract(p0));// ray is the new ray in the beam of ray
