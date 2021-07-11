@@ -76,7 +76,7 @@ public class Render {
     /**
      * Create a grid [over the picture] in the pixel color map. given the grid's
      * step and color.
-     *
+     @autor Dan Zilberstein
      * @param step  grid's step
      * @param color grid's color
      */
@@ -95,6 +95,7 @@ public class Render {
 
 
     /**
+     @autor Dan Zilberstein
      * Produce a rendered image file
      */
     public void writeToImage() {
@@ -105,6 +106,7 @@ public class Render {
     }
 
     /**
+     @autor Dan Zilberstein
      * Cast ray from camera in order to color a pixel
      * @param nX resolution on X axis (number of pixels in row)
      * @param nY resolution on Y axis (number of pixels in column)
@@ -121,6 +123,7 @@ public class Render {
 
 
     /**
+     @autor Dan Zilberstein
      * This function renders image's pixel color map from the scene included with
      * the Renderer object - with multi-threading
      */
@@ -129,7 +132,6 @@ public class Render {
         final int nY = _imageWriter.getNy();
         final Pixel thePixel = new Pixel(nY, nX);
         // Generate threads
-        Color pixelColor=Color.BLACK;
         Thread[] threads = new Thread[threadsCount];
         for (int i = threadsCount - 1; i >= 0; --i) {
             threads[i] = new Thread(() -> {
@@ -138,9 +140,8 @@ public class Render {
                     if (level_adaptive_supersampling == 0)
                         castRay(nX, nY, pixel.col, pixel.row);
                     else {
-
-
-                        _imageWriter.writePixel(pixel.col, pixel.row, AdpativeSuperSampling(nX, nY, pixel.row, pixel.col, _rayTracerBase));
+                        Color adaptiveColor = AdpativeSuperSampling(nX, nY, pixel.row, pixel.col, _rayTracerBase);
+                        _imageWriter.writePixel(pixel.col, pixel.row,adaptiveColor );
                     }
                 }
                    // castRay(nX, nY, pixel.col, pixel.row);
@@ -165,6 +166,7 @@ public class Render {
     }
 
     /**
+     @autor Dan Zilberstein
      * This function renders image's pixel color map from the scene included with
      * the Renderer object
      */
@@ -237,6 +239,7 @@ public class Render {
 
 
     /**
+     @autor Dan Zilberstein
      * Set multi-threading <br>
      * - if the parameter is 0 - number of cores less 2 is taken
      *
@@ -256,6 +259,7 @@ public class Render {
     }
 
     /**
+     *autor Dan Zilberstein
      * Set debug printing on
      *
      * @return the Render object itself
