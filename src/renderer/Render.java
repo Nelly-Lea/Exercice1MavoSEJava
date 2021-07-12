@@ -259,7 +259,7 @@ public class Render {
     }
 
     /**
-     *autor Dan Zilberstein
+     @autor Dan Zilberstein
      * Set debug printing on
      *
      * @return the Render object itself
@@ -275,8 +275,7 @@ public class Render {
      * the Renderer and for follow up its progress.<br/>
      * There is a main follow up object and several secondary objects - one in each
      * thread.
-     *
-     * @author Dan
+     @author Dan Zilberstein
      *
      */
     private class Pixel {
@@ -294,6 +293,7 @@ public class Render {
          *
          * @param maxRows the amount of pixel rows
          * @param maxCols the amount of pixel columns
+         @author Dan Zilberstein
          */
         public Pixel(int maxRows, int maxCols) {
             this.maxRows = maxRows;
@@ -321,7 +321,8 @@ public class Render {
          * @return the progress percentage for follow up: if it is 0 - nothing to print,
          *         if it is -1 - the task is finished, any other value - the progress
          *         percentage (only when it changes)
-         */
+         @author Dan Zilberstein
+          */
         private synchronized int nextP(Pixel target) {
             ++col;
             ++this.counter;
@@ -357,6 +358,7 @@ public class Render {
          * @param target target secondary Pixel object to copy the row/column of the
          *               next pixel
          * @return true if the work still in progress, -1 if it's done
+         @author Dan Zilberstein
          */
         public boolean nextPixel(Pixel target) {
             int percent = nextP(target);
@@ -375,6 +377,7 @@ public class Render {
 
         /**
          * Debug print of progress percentage - must be run from the main thread
+         @author Dan Zilberstein
          */
         public void print() {
             if (Render.this.print)
