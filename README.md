@@ -26,4 +26,5 @@ These enhancements aim to elevate the visual quality and realism of the 3D scene
 
 ## Credits
 This project was co-developed with [csfez](https://github.com/csfez/).
+
 Special thanks to our professor, Eliezer Gensburger, for supervising and guiding us throughout this project.
