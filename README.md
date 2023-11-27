@@ -25,6 +25,6 @@ We have introduced two enhancements to the project:
 These enhancements aim to elevate the visual quality and realism of the 3D scene, offering a more immersive and polished experience for users.
 
 ## Credits
-This project was co-developed by [Chirly Sfez](https://github.com/csfez/) and [Nelly Lea Amar] (https://github.com/Nelly-Lea).
+This project was co-developed by [Chirly Sfez](https://github.com/csfez/) and [Nelly Lea Amar](https://github.com/Nelly-Lea).
 
 Special thanks to our professor, Eliezer Gensburger, for supervising and guiding us throughout this project.
